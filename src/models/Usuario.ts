@@ -12,7 +12,7 @@ export interface UsuarioInstance extends Model{
     nascimento: Date;
     id_login: number;
     tipo: string;
-    id_loja: number;
+    id_loja: number | null;
 }
 
 export const Usuario= sequelize.define<UsuarioInstance>('Usuario', {
@@ -30,7 +30,7 @@ export const Usuario= sequelize.define<UsuarioInstance>('Usuario', {
         allowNull: false
     },
     genero: {
-        type: DataTypes.ENUM('1', '-1', '0'), //1= homem, -1= mulher, 0= nao informar
+        type: DataTypes.ENUM('masculino', 'feminino', 'oculto'),
         allowNull: false
     },
     nascimento: {

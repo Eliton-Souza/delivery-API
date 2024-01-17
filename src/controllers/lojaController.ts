@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
-import { Pessoa } from '../../models/Pessoa/Pessoa';
-import { Lider } from '../../models/Pessoa/Lider';
-import { sequelize } from '../../instances/mysql';
-import { Clube } from '../../models/Clube';
-import { atualizarPessoa, criarPessoa, salvarPessoa } from '../../services/atores/servicePessoa';
-import { dadosUsuario, gerarPayload, gerarToken } from '../../config/passport';
+import { dadosUsuario} from '../config/passport';
+import {
+  alterarCargoFuncionario, 
+  pegarFuncionarios }
+from '../services/serviceUsuario';
+import { criarLoja } from '../services/serviceLoja';
+
 
 declare global {
   namespace Express {
@@ -12,87 +13,94 @@ declare global {
   }
 }
 
-const bcrypt = require('bcryptjs');
 
-export const criarLider = async (req: Request, res: Response) => {
+export const cadastrarLoja = async (req: Request, res: Response) => {
 
-  const transaction = await sequelize.transaction();
-  const { nome, sobrenome, genero, nascimento, senha} = req.body;
-
-  const senhaHash= await bcrypt.hash(senha, 10);
-  
+  const { nome, entrega, funcionamento, produtos, tipo} = req.body;
 
   try {
-    const pessoa = await criarPessoa(nome, sobrenome, nascimento, genero, transaction);
+   
+    const loja = await criarLoja(nome, entrega, funcionamento, produtos, tipo);
+  
+    return res.json({ sucesso: loja });
 
-    const lider = await Lider.create({
-        id_pessoa: pessoa.id_pessoa,
-        id_clube: req.body.id_clube,
-        login: req.body.login,
-        senha: senhaHash
-    }, { transaction });
-
-    await transaction.commit();
-
-    const payload= gerarPayload(lider.id_lider, (pessoa.nome +' '+ pessoa.sobrenome), lider.id_clube);
-    const token= gerarToken(payload);
-
-    res.json({ Pessoa: pessoa, Lider: lider, token: token });
   }catch (error: any) {
-    await transaction.rollback();
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      const str = error.errors[0].value;
-      const novaStr = str.replace(/-/g, ' ');
-    
-      return res.json({ error: novaStr + ' já está cadastrado(a) no sistema' });
-    }
     return res.json({error: error});
   }
-};
+}
   
 
-export const listarLideres = async (req: Request, res: Response) => {
+export const listarFuncionarios = async (req: Request, res: Response) => {
+
+  const id_loja = req.params.id_loja;
 
   try {
-    const lideres = await Lider.findAll({
-      include: [
-          {
-            model: Pessoa,            
-          },
-          {
-            model: Clube,
-            attributes: ['nome']
-          }
-        ],
-      attributes: { 
-          exclude: ['login', 'senha'] 
-      },
-      raw: true
-    });
-  
-    const lideresFormatados = lideres.map((lider: any) => {
-      return {
-        id_lider: lider.id_lider,
-        id_pessoa: lider.id_pessoa,
-        nome: lider['Pessoa.nome'],
-        sobrenome: lider['Pessoa.sobrenome'],
-        nascimento: lider['Pessoa.nascimento'],
-        genero: lider['Pessoa.genero'],
-        clube: lider['Clube.nome'],
-        id_clube: lider.id_clube
-      };
-    });
+    const funcionarios= await pegarFuncionarios(id_loja);
     
-    return res.json({ lideres: lideresFormatados });
+    return res.json({ funcionarios: funcionarios });
   } catch (error) {
-    return res.json({error: "Erro ao encontrar líderes"});
+    return res.json({error: "Erro ao encontrar funcionarios"});
   }
 }
 
 
+export const atualizarFuncionário = async (req: Request, res: Response) => {
+  const id_funcionario = req.params.id_funcionario;
+  const id_gerente: number = req.user?.id_usuario || 0;
+
+  const { tipo } = req.body;
+
+    try {
+      const mensagem= await alterarCargoFuncionario(id_funcionario, id_gerente, tipo);
+      
+      return res.json({ sucesso: mensagem });
+    } catch (error:any) {
+      return res.json({ error: 'Erro ao atualizar o funcionário'});
+    }  
+};
+
+
+
+
+
+
+
+  
+/*
+export const deletarFuncioario = async (req: Request, res: Response) => {
+
+  const id_funcionario= req.params.id_funcionario;
+  const id_gerente: number = req.user?.id_lider || 0;   //ATUALIZAR PRA ID_USUARIO
+ 
+  try {
+  
+    // Recuperar dados do banco
+    const funcionario = await Usuario.findByPk(id_funcionario);
+    const gerente = await Usuario.findByPk(id_gerente);
+
+    if (funcionario && gerente) {
+      if(funcionario.id_loja == gerente.id_loja){
+        await Usuario.destroy({where:{id_usuario:id_funcionario}});
+        return res.json({sucesso: "Funcionário excluído com sucesso"});
+      }
+      else{
+        return res.json({ error: 'Lojas diferentes' });
+      }
+    }
+    else{
+      return res.json({ error: 'Funcionário ou gerente não encontrado' });
+    }    
+  } catch (error) {
+    return res.json({ error: 'Erro ao excluir Lider'});
+  }
+};
+
+
+
+
 export const meusDadosLider = async (req: Request, res: Response) => {
 
-  const id = req.user?.id_lider;
+  const id = req.user?.id_usuario;
 
   try {
     const liderResponse = await Lider.findByPk(id, {
@@ -408,4 +416,4 @@ export const login = async (req: Request, res: Response) => {
     console.log(error);
     return res.json({ error: "Erro ao fazer o login" });
   }
-};
+};*/

@@ -24,20 +24,22 @@ export interface LojaInstance extends Model {
     entrega: string;    //tempo medio de entrega fornecido pela loja | 0= loja nao faz entrega
     funcionamento: Funcionamento;   // Utilizando uma interface específica
     produtos: Record<string, any>;
-    bloqueado: string;  //pro administrador do sistema bloquear a loja por qualquer motivo
-    aberto: string;
+    bloqueado: boolean;  //pro administrador do sistema bloquear a loja por qualquer motivo
+    aberto: boolean;
     nota: number;
+    tipo: string;   //restaurante, comercial, agropecuaria, açougue, farmacia
 }
 
 
 export const Loja= sequelize.define<LojaInstance>('Loja', {
-    id_usuario: {
+    id_loja: {
         primaryKey: true,
         autoIncrement: true,
         type: DataTypes.INTEGER
     },
     nome: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false
     },
     entrega: {
@@ -53,16 +55,20 @@ export const Loja= sequelize.define<LojaInstance>('Loja', {
         allowNull: false
     },
     bloqueado: {
-        type: DataTypes.STRING,
+        type: DataTypes.BOOLEAN,
         allowNull: false
     },
     aberto: {
-        type: DataTypes.STRING,
+        type: DataTypes.BOOLEAN,
         allowNull: false
     },
     nota: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: true
+    },
+    tipo: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
 }, {
     tableName: 'Loja',

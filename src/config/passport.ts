@@ -4,13 +4,13 @@ import dotenv from 'dotenv';
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import jwt from "jsonwebtoken";
 import { Lider } from "../models/Pessoa/Lider";
+import { Usuario } from "../models/Usuario";
 
 dotenv.config();
 
 export interface dadosUsuario{
-    id_lider: number;
+    id_usuario: number;
     nome: string;
-    id_clube: number;
     exp: number;
 };
 
@@ -24,10 +24,10 @@ const jwtStrategy = new JWTStrategy(options, async (payload: dadosUsuario, done)
     const tokenExp = payload.exp;
     const currentTimestamp = Math.floor(Date.now() / 1000);
 
-    const lider= await Lider.findByPk(payload.id_lider);
+    const usuario= await Usuario.findByPk(payload.id_usuario);
 
-    if (tokenExp < currentTimestamp || !lider) {
-        // O token está expirado ou lider nao encontrado
+    if (tokenExp < currentTimestamp || !usuario) {
+        // O token está expirado ou usuario nao encontrado
         return done(null, false);
     }
 
@@ -55,13 +55,12 @@ export const gerarToken= (dados: dadosUsuario) => {
 }
 
 
-export const gerarPayload = (id_lider: number, nomeCompleto: string, id_clube: number) => {
+export const gerarPayload = (id_usuario: number, nomeCompleto: string) => {
 
     const payload: dadosUsuario = {
-      id_lider: id_lider,
+      id_usuario: id_usuario,
       nome: nomeCompleto,
-      id_clube: id_clube,
-      exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 15) // Definindo a expiração para 15 dias a partir do momento atual
+      exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 7) // Definindo a expiração para 7 dias a partir do momento atual
     };
 
     return payload;

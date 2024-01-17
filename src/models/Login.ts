@@ -10,7 +10,7 @@ export interface LoginInstance extends Model{
 }
 
 export const Login= sequelize.define<LoginInstance>('Login', {
-    id_usuario: {
+    id_login: {
         primaryKey: true,
         autoIncrement: true,
         type: DataTypes.INTEGER

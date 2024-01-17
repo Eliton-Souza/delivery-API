@@ -6,7 +6,7 @@ dotenv.config();
 export const sequelize= new Sequelize(
 
     process.env.database as string,
-    process.env.username as string,
+    process.env.user as string,
     process.env.password as string,
     {
         host:  process.env.host as string,
