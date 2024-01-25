@@ -1,18 +1,19 @@
 import { Loja } from '../models/Loja';
+import { funcionamentoInicial } from './helper';
 
 
 //cadastra uma nova loja
-export const criarLoja = async (nome: string, entrega: string, funcionamento: Record<string, any>, produtos: Record<string, any>, tipo: string) => {
+export const criarLoja = async (nome: string, tipo: string) => {
 
   try {
     const loja = await Loja.create({
       nome,
-      entrega,
-      funcionamento,
-      produtos,
-      bloqueado: false,
+      entrega: 0,
+      funcionamento: funcionamentoInicial(),
+      produtos: {},
+      bloqueado: true,
       aberto: false,
-      nota: 0,
+      nota: null,
       tipo
     });
 

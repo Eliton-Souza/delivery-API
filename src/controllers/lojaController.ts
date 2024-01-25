@@ -16,11 +16,11 @@ declare global {
 
 export const cadastrarLoja = async (req: Request, res: Response) => {
 
-  const { nome, entrega, funcionamento, produtos, tipo} = req.body;
+  const { nome, tipo} = req.body;
 
   try {
    
-    const loja = await criarLoja(nome, entrega, funcionamento, produtos, tipo);
+    const loja = await criarLoja(nome, tipo);
   
     return res.json({ sucesso: loja });
 
