@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { registraCodigo, verificaCode, verificaNumero } from '../services/serviceVerificacao';
+import { deletarLoginsExpirados, registraCodigo, verificaCode, verificaNumero } from '../services/serviceVerificacao';
 import { enviarMSG } from '../services/serviceEnviarMsg';
 
 
@@ -32,6 +32,21 @@ export const validaCodigo = async (req: Request, res: Response) => {
     await verificaCode(numero, codigo);
   
     return res.status(200).json({ success: true, message: 'Codigo validado com sucesso' });
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+
+
+//faz a validação do codigo q o usuario forneceu
+export const deletarExpirados = async (req: Request, res: Response) => {
+
+  try {
+   
+    await deletarLoginsExpirados();
+  
+    return res.status(200).json({ success: true, message: 'Logins expirados foram deletados com sucesso' });
   } catch (error: any) {
     return res.status(500).json({ success: false, error: error.message });
   }

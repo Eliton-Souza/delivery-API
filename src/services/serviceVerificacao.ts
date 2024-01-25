@@ -1,4 +1,7 @@
+import { Login } from '../models/Login';
 import { VerificacaoTemp } from '../models/VerificacaoTemp';
+import { Op } from 'sequelize';
+import { formataNumero } from './helper';
 
 const geraCodeRandom= async() =>{
   // Gera um código aleatório de 4 dígitos
@@ -38,6 +41,18 @@ export const verificaNumero = async (numero: string) => {
 
   try {
     const dataAtual = new Date();
+    
+    const numeroFormatado= formataNumero(numero);
+  
+    const numLogin = await Login.findOne({
+      where:{
+        celular: numeroFormatado
+      }
+    })
+
+    if(numLogin){
+      throw new Error('Este número já está cadastrado no sistema');
+    }
   
     const result = await VerificacaoTemp.findOne({
       where: {
@@ -108,6 +123,28 @@ export const verificaCode = async (numero: string, codigo: string) => {
     else{
       throw new Error('Codigo inválido');
     }
+
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+// Serviço para deletar todos os logins expirados
+export const deletarLoginsExpirados = async () => {
+  try {
+    const dataAtual = new Date();
+
+    // Deleta os registros expirados
+    await VerificacaoTemp.destroy({
+      where: {
+        expiracao: {
+          [Op.lt]: dataAtual
+        }
+      }
+    });
+
+    return true;
 
   } catch (error) {
     throw error;
