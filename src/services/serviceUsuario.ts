@@ -41,6 +41,26 @@ export const criarUsuario = async (nome: string, sobrenome: string, nascimento: 
 }
 
 
+//pega os dados basicos de um usuario
+export const pegarUsuario = async (id_login: number) => {
+
+  try {
+    const usuario = await Usuario.findOne({
+      where: {
+        id_login
+      },
+      attributes: ['id_usuario', 'nome', 'sobrenome'],
+      raw: true
+  });
+    
+    return usuario;
+    
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+
 
 //lista todos os funcionarios de uma loja especifica
 export const pegarFuncionarios = async (id_loja: string) => {

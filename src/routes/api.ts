@@ -9,6 +9,8 @@ import { verificarToken } from '../config/passport';
 
 const router = Router();
 
+router.post('/login', UsuarioController.login);
+
 //CODIGO VALIDAÇÃO
 router.post('/numero', VerificacaoController.validaNumero);
 router.post('/codigo', VerificacaoController.validaCodigo);

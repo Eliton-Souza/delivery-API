@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { sequelize } from '../instances/mysql';
 import { dadosUsuario, gerarPayload, gerarToken } from '../config/passport';
-import { gerarLogin } from '../services/serviceLogin';
+import { fazerLogin, gerarLogin } from '../services/serviceLogin';
 import {
   alterarCargoFuncionario, 
   criarUsuario,
-  pegarFuncionarios }
+  pegarFuncionarios, 
+  pegarUsuario}
 from '../services/serviceUsuario';
 
 
@@ -15,7 +16,7 @@ declare global {
   }
 }
 
-
+//MELHORAR ESSE TIPO DE USUARIO E RESTRINGIR ACESSO APENAS DEPOIS DE VALIDAR CONTATO
 export const cadastrarUsuario = async (req: Request, res: Response) => {
 
   const transaction = await sequelize.transaction();
@@ -29,17 +30,48 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     if(tipo == "cliente"){
        const payload= gerarPayload(usuario.id_usuario, (usuario.nome +' '+ usuario.sobrenome));
        const token= gerarToken(payload);
-      return res.json({ Usuario: usuario, token: token });
-    }
+       return res.status(200).json({ success: true, token: token });
+      }
     else{
-      return res.json({ Usuario: usuario });
+      return res.status(200).json({ success: true });
     }
 
   }catch (error: any) {
     await transaction.rollback();
-    return res.json({error: error});
+    return res.status(500).json({ success: false, error: error.message });
   }
 }
+
+
+//FAZER LOGIN
+export const login = async (req: Request, res: Response) => {
+
+  const { login, senha } = req.body;
+
+  try {
+    
+   const id_login= await fazerLogin(login, senha);
+   const usuario= await pegarUsuario(id_login);
+
+  if(usuario){
+    const payload= gerarPayload(usuario.id_usuario, (usuario.nome +' '+ usuario.sobrenome));
+    const token = gerarToken(payload);
+
+    return res.status(200).json({ success: true, token: token });
+  }
+   
+  throw new Error('Usuario não encontrado'); 
+   
+   
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+
+
+
+
   
 
 export const listarFuncionarios = async (req: Request, res: Response) => {
@@ -49,9 +81,9 @@ export const listarFuncionarios = async (req: Request, res: Response) => {
   try {
     const funcionarios= await pegarFuncionarios(id_loja);
     
-    return res.json({ funcionarios: funcionarios });
-  } catch (error) {
-    return res.json({error: "Erro ao encontrar funcionarios"});
+    return res.status(200).json({ success: true, funcionarios: funcionarios });
+  } catch (error: any) {
+    return res.status(500).json({success: false, error: "Erro ao encontrar funcionarios"});
   }
 }
 
@@ -65,9 +97,10 @@ export const atualizarFuncionário = async (req: Request, res: Response) => {
     try {
       const mensagem= await alterarCargoFuncionario(id_funcionario, id_gerente, tipo);
       
-      return res.json({ sucesso: mensagem });
+      return res.status(200).json({ success: true, message: mensagem });
+      
     } catch (error:any) {
-      return res.json({ error: 'Erro ao atualizar o funcionário'});
+      return res.status(500).json({ success: false, error: error.message });
     }  
 };
 
