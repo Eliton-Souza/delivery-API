@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import jwt from "jsonwebtoken";
-import { Lider } from "../models/Pessoa/Lider";
 import { Usuario } from "../models/Usuario";
 
 dotenv.config();
@@ -11,6 +10,7 @@ dotenv.config();
 export interface dadosUsuario{
     id_usuario: number;
     nome: string;
+    sobrenome: string;
     exp: number;
 };
 
@@ -55,11 +55,12 @@ export const gerarToken= (dados: dadosUsuario) => {
 }
 
 
-export const gerarPayload = (id_usuario: number, nomeCompleto: string) => {
+export const gerarPayload = (id_usuario: number, nome: string, sobrenome: string) => {
 
     const payload: dadosUsuario = {
       id_usuario: id_usuario,
-      nome: nomeCompleto,
+      nome: nome,
+      sobrenome: sobrenome,
       exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 7) // Definindo a expiração para 7 dias a partir do momento atual
     };
 
