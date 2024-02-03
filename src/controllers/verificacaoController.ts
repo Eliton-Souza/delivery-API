@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { deletarLoginsExpirados, registraCodigo, verificaCelular, verificaCode } from '../services/serviceVerificacao';
-import { enviarMSG } from '../services/serviceEnviarMsg';
+import { enviarMSG } from '../services/serviceTwilio';
 import { formataNumero } from './helper';
 
 
