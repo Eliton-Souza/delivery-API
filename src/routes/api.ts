@@ -2,10 +2,12 @@ import { Router } from 'express';
 import * as UsuarioController from '../controllers/usuarioController';
 import * as LojaController from '../controllers/lojaController';
 import * as VerificacaoController from '../controllers/verificacaoController';
+import * as FileController from '../controllers/fileController';
 
 import * as valida from '../middlewares/validaSchema';
 
 import { verificarToken } from '../config/passport';
+import { uploadFile } from '../middlewares/multerConfig';
 
 const router = Router();
 
@@ -22,6 +24,9 @@ router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFu
 
 //CRUD LOJA
 router.post('/loja', LojaController.cadastrarLoja);
+
+
+router.post('/upload-file', uploadFile.single('file'), FileController.uploadImagem);
 
 
 
