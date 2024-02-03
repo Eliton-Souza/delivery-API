@@ -1,7 +1,6 @@
 import { Login } from '../models/Login';
 import { VerificacaoTemp } from '../models/VerificacaoTemp';
 import { Op } from 'sequelize';
-import { formataNumero } from './helper';
 
 const geraCodeRandom= async() =>{
   // Gera um código aleatório de 4 dígitos
@@ -12,20 +11,21 @@ const geraCodeRandom= async() =>{
 
 const geraExpiracao= async()=> {
   const currentTime = new Date();
-  const expirationTime = new Date(currentTime.getTime() + 5 * 60000); // Multiplica por 60000 para converter minutos em milissegundos
+  const expirationTime = new Date(currentTime.getTime() + 3 * 60000); // Multiplica por 60000 para converter minutos em milissegundos
   return expirationTime;
 }
 
 //registra um novo codigo na tabela temporaria
-export const registraCodigo= async (numero: string) => {
+export const registraCodigo= async (celular: string) => {
   
   try {
     const codigoAleatorio = await geraCodeRandom();
     const expirationTime = await geraExpiracao();
 
     const verificacao = await VerificacaoTemp.create({
-      numero,
+      celular,
       codigo: codigoAleatorio,
+      validado: false,
       expiracao: expirationTime,
     });
 
@@ -37,16 +37,14 @@ export const registraCodigo= async (numero: string) => {
 }
 
 // Verifica se um número de telefone já está registrado na tabela temporária ou token expirado
-export const verificaNumero = async (numero: string) => {
+export const verificaCelular = async (celular: string) => {
 
   try {
     const dataAtual = new Date();
-    
-    const numeroFormatado= formataNumero(numero);
-  
+      
     const numLogin = await Login.findOne({
       where:{
-        celular: numeroFormatado
+        celular
       }
     })
 
@@ -56,7 +54,7 @@ export const verificaNumero = async (numero: string) => {
   
     const result = await VerificacaoTemp.findOne({
       where: {
-        numero: numero
+        celular
       }
     });
 
@@ -68,7 +66,7 @@ export const verificaNumero = async (numero: string) => {
         // Se expirou, exclui o registro
         await VerificacaoTemp.destroy({
           where: {
-            numero: numero
+            celular
           }
         });
       }
@@ -85,37 +83,35 @@ export const verificaNumero = async (numero: string) => {
 
 
 // Verifica se um número de telefone já está registrado na tabela temporária ou token expirado
-export const verificaCode = async (numero: string, codigo: string) => {
+export const verificaCode = async (celular: string, codigo: string) => {
 
   try {
     const dataAtual = new Date();
   
     const result = await VerificacaoTemp.findOne({
       where: {
-        numero: numero
+       celular
       }
     });
 
     if (!result){
-      throw new Error('Numero não encontrado');
+      throw new Error('WhatsApp não encontrado');
     }
 
     // Se existe um registro e não está expirado
     if (result.expiracao > dataAtual && result.codigo == codigo) {
 
-      await VerificacaoTemp.destroy({
-        where: {
-          numero: numero
-        }
+      await result.update({ 
+        validado: true
       });
-      //deleta o registro e retorna true
+      
       return true;
 
     } else if(result.expiracao < dataAtual) {
 
       await VerificacaoTemp.destroy({
         where: {
-          numero: numero
+          celular
         }
       });
       throw new Error('Token expirado, tente novamente enviando um novo codigo');
@@ -128,6 +124,37 @@ export const verificaCode = async (numero: string, codigo: string) => {
     throw error;
   }
 };
+
+// Verifica se um número de telefone já está registrado na tabela temporária ou token expirado
+export const deletaLoginVerificado = async (celular: string) => {
+  try {
+    const result = await VerificacaoTemp.findOne({
+      where: {
+        celular
+      }
+    });
+
+    if (!result) {
+      throw new Error('Registro não encontrado');
+    }
+
+    await VerificacaoTemp.destroy({
+      where: {
+        id: result.id
+      }
+    });
+
+    if (!result.validado) {
+      throw new Error('Seu código não foi validado');
+    }
+
+    return true;
+
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 
 // Serviço para deletar todos os logins expirados

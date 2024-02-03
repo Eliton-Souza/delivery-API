@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { sequelize } from '../instances/mysql';
 import { dadosUsuario, gerarPayload, gerarToken } from '../config/passport';
 import { fazerLogin, gerarLogin } from '../services/serviceLogin';
+import { deletaLoginVerificado } from '../services/serviceVerificacao';
 import {
   alterarCargoFuncionario, 
   criarUsuario,
@@ -20,15 +21,16 @@ declare global {
 export const cadastrarUsuario = async (req: Request, res: Response) => {
 
   const transaction = await sequelize.transaction();
-  const { nome, sobrenome, genero, nascimento, tipo, id_loja, email, celular, senha} = req.body;
+  const { nome, sobrenome, genero, nascimento, email, celular, senha, tipo, id_loja} = req.body;
 
   try {
+    await deletaLoginVerificado(celular);
     const id_login= await gerarLogin(email, celular, senha, transaction);
     const usuario = await criarUsuario(nome, sobrenome, nascimento, genero, id_login, tipo, id_loja, transaction);
     await transaction.commit();
 
     if(tipo == "cliente"){
-       const payload= gerarPayload(usuario.id_usuario, (usuario.nome +' '+ usuario.sobrenome));
+       const payload= gerarPayload(usuario.id_usuario, usuario.nome, usuario.sobrenome);
        const token= gerarToken(payload);
        return res.status(200).json({ success: true, token: token });
       }
@@ -54,7 +56,7 @@ export const login = async (req: Request, res: Response) => {
    const usuario= await pegarUsuario(id_login);
 
   if(usuario){
-    const payload= gerarPayload(usuario.id_usuario, (usuario.nome +' '+ usuario.sobrenome));
+    const payload= gerarPayload(usuario.id_usuario, usuario.nome, usuario.sobrenome);
     const token = gerarToken(payload);
 
     return res.status(200).json({ success: true, token: token });
@@ -64,7 +66,7 @@ export const login = async (req: Request, res: Response) => {
    
    
   } catch (error: any) {
-    return res.status(500).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 };
 

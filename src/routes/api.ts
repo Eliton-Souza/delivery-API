@@ -12,11 +12,11 @@ const router = Router();
 router.post('/login', UsuarioController.login);
 
 //CODIGO VALIDAÇÃO
-router.post('/numero', VerificacaoController.validaNumero);
+router.post('/celular', VerificacaoController.validaCelular);
 router.post('/codigo', VerificacaoController.validaCodigo);
 
 //CRUD USUARIO
-router.post('/usuario', verificarToken, UsuarioController.cadastrarUsuario);
+router.post('/usuario', UsuarioController.cadastrarUsuario);
 router.get('/usuario/:id_loja', verificarToken, UsuarioController.listarFuncionarios);
 router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFuncionário);
 
