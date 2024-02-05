@@ -13,6 +13,7 @@ export interface UsuarioInstance extends Model{
     id_login: number;
     tipo: string;
     id_loja: number | null;
+    avatar: string;
 }
 
 export const Usuario= sequelize.define<UsuarioInstance>('Usuario', {
@@ -74,6 +75,10 @@ export const Usuario= sequelize.define<UsuarioInstance>('Usuario', {
             }
         },
         
+    },
+    avatar: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
 }, {
     tableName: 'Usuario',

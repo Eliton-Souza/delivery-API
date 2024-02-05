@@ -17,7 +17,7 @@ const palavraPadronizado = (nome: string) => {
 }
 
 //cadastra um novo usuario, seja cliente ou cargo de loja
-export const criarUsuario = async (nome: string, sobrenome: string, nascimento: Date, genero: string, id_login: number, tipo: string, id_loja: number, transaction: any) => {
+export const criarUsuario = async (nome: string, sobrenome: string, nascimento: Date, genero: string, id_login: number, tipo: string, id_loja: number, avatar: string, transaction: any) => {
 
   const nomePadronizado = palavraPadronizado(nome);
   const sobrenomePadronizado = palavraPadronizado(sobrenome);
@@ -31,6 +31,7 @@ export const criarUsuario = async (nome: string, sobrenome: string, nascimento: 
       id_login,
       tipo,
       id_loja: tipo!== 'cliente'? id_loja : null,
+      avatar,
     }, { transaction });
 
     return usuario;
@@ -49,7 +50,7 @@ export const pegarUsuario = async (id_login: number) => {
       where: {
         id_login
       },
-      attributes: ['id_usuario', 'nome', 'sobrenome'],
+      attributes: ['id_usuario', 'nome', 'sobrenome', 'avatar'],
       raw: true
   });
     
