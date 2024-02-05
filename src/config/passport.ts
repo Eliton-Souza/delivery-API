@@ -11,6 +11,7 @@ export interface dadosUsuario{
     id_usuario: number;
     nome: string;
     sobrenome: string;
+    avatar: string;
     exp: number;
 };
 
@@ -55,12 +56,13 @@ export const gerarToken= (dados: dadosUsuario) => {
 }
 
 
-export const gerarPayload = (id_usuario: number, nome: string, sobrenome: string) => {
+export const gerarPayload = (id_usuario: number, nome: string, sobrenome: string, urlAvatar: string) => {
 
     const payload: dadosUsuario = {
       id_usuario: id_usuario,
       nome: nome,
       sobrenome: sobrenome,
+      avatar: urlAvatar,
       exp: Math.floor(Date.now() / 1000) + (3600 * 24 * 7) // Definindo a expiração para 7 dias a partir do momento atual
     };
 
