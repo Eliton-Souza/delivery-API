@@ -40,7 +40,7 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
 
   }catch (error: any) {
     await transaction.rollback();
-    return res.status(500).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 }
 
@@ -85,7 +85,7 @@ export const listarFuncionarios = async (req: Request, res: Response) => {
     
     return res.status(200).json({ success: true, funcionarios: funcionarios });
   } catch (error: any) {
-    return res.status(500).json({success: false, error: "Erro ao encontrar funcionarios"});
+    return res.json({success: false, error: "Erro ao encontrar funcionarios"});
   }
 }
 
@@ -102,7 +102,7 @@ export const atualizarFuncionário = async (req: Request, res: Response) => {
       return res.status(200).json({ success: true, message: mensagem });
       
     } catch (error:any) {
-      return res.status(500).json({ success: false, error: error.message });
+      return res.json({ success: false, error: error.message });
     }  
 };
 

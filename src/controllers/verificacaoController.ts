@@ -50,7 +50,7 @@ export const deletarExpirados = async (req: Request, res: Response) => {
   
     return res.status(200).json({ success: true, message: 'Logins expirados foram deletados com sucesso' });
   } catch (error: any) {
-    return res.status(500).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 };
 
