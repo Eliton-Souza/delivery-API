@@ -1,15 +1,6 @@
 import { Usuario } from '../models/Usuario';
+import { palavraPadronizado } from './helper';
 
-
-//padroniza o nome dos usuarios
-const palavraPadronizado = (nome: string) => {
-  return nome
-  .split(' ')
-  .map((palavra) => {
-    return palavra.charAt(0).toUpperCase() + palavra.slice(1).toLowerCase();
-  })
-  .join(' ');
-}
 
 //cadastra um novo usuario, seja cliente ou cargo de loja
 export const criarUsuario = async (nome: string, sobrenome: string, nascimento: Date, genero: string, id_login: number, tipo: string, id_loja: number, avatar: string, transaction: any) => {
@@ -89,6 +80,27 @@ export const pegarFuncionarios = async (id_loja: string) => {
     throw error;
   }
 }
+
+//pega os dados basicos de um usuario
+export const pegar1Funcionario = async (id_usuario: number) => {
+
+  try {
+    const funcionario = await Usuario.findByPk(id_usuario, {
+      attributes: ['nome', 'sobrenome', 'id_loja', 'avatar'],
+      raw: true
+    });
+
+    if (!funcionario || !funcionario.id_loja) {
+      throw new Error('Funcionário não encontrado');
+    }
+    
+    return funcionario;
+    
+  } catch (error: any) {
+    throw error;
+  }
+}
+
 
 
 
