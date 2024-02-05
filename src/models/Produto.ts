@@ -9,7 +9,7 @@ export interface ProdutoInstance extends Model {
     avatar: string; 
     descricao: string;
     categoria: string;
-    status: boolean;
+    status: string;     //ativo, suspenso, arquivado.
 }
 
 
@@ -40,7 +40,7 @@ export const Produto= sequelize.define<ProdutoInstance>('Loja', {
         allowNull: false
     },
     status: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.STRING,
         allowNull: false
     },
 }, {
