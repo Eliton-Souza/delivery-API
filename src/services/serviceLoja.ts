@@ -20,10 +20,21 @@ export const criarLoja = async (nome: string, tipo: string) => {
   }
 }
 
+// pega os dados de uma loja
+export const pegarDadosLoja = async (nome: string) => {
+  try {
+    const loja = await Loja.findOne({
+      where: {
+        nome
+      }
+    });
 
+    if(!loja){
+      throw new Error('Loja não encontrada');
+    }
 
-
-
-
-
-
+    return loja;
+  } catch (error: any) {
+    throw error;
+  }
+}

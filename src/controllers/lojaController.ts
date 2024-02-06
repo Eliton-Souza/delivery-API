@@ -4,7 +4,7 @@ import {
   alterarCargoFuncionario, 
   pegarFuncionarios }
 from '../services/serviceUsuario';
-import { criarLoja } from '../services/serviceLoja';
+import { criarLoja, pegarDadosLoja } from '../services/serviceLoja';
 
 
 declare global {
@@ -28,6 +28,23 @@ export const cadastrarLoja = async (req: Request, res: Response) => {
     return res.json({error: error});
   }
 }
+
+
+
+//lista os dados de uma loja com base no nome
+export const pegarLoja = async (req: Request, res: Response) => {
+
+  const nome_loja = req.params.nome_loja;
+
+  try {
+    const loja= await pegarDadosLoja(nome_loja);
+    
+    return res.status(200).json({ success: true, loja: loja });
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
+
   
 
 export const listarFuncionarios = async (req: Request, res: Response) => {

@@ -29,6 +29,7 @@ router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarPr
 
 //CRUD LOJA
 router.post('/loja', LojaController.cadastrarLoja);
+router.get('/loja/:nome_loja', LojaController.pegarLoja);
 
 
 router.post('/upload-file', uploadFile.single('file'), FileController.uploadImagem);
