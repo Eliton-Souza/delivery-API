@@ -1,11 +1,8 @@
 import { Request, Response } from 'express';
 import { sequelize } from '../instances/mysql';
 import { dadosUsuario } from '../config/passport';
-import { 
-  pegar1Funcionario, 
-  pegarFuncionarios}
-from '../services/serviceUsuario';
-import { alterarProduto, criarProduto } from '../services/serviceProduto';
+import { pegar1Funcionario } from '../services/serviceUsuario';
+import { alterarProduto, criarProduto, pegarProdutos, registrarTamPreco } from '../services/serviceProduto';
 
 
 
@@ -19,11 +16,20 @@ declare global {
 export const cadastrarProduto = async (req: Request, res: Response) => {
 
   const transaction = await sequelize.transaction();
-  const { id_loja, nome, avatar, descricao, categoria } = req.body;
+  const { id_loja, nome, avatar, descricao, categoria, tam_preco } = req.body;
+  const tam_preco_json = JSON.parse(tam_preco);
 
   try {
-    await criarProduto(id_loja, nome, avatar, descricao, categoria);
-       
+    const produto= await criarProduto(id_loja, nome, avatar, descricao, categoria, transaction);
+
+    for (const chave in tam_preco_json) {
+      if (Object.hasOwnProperty.call(tam_preco_json, chave)) {
+        const valor = parseFloat(tam_preco_json[chave]);
+        await registrarTamPreco(produto.id_produto, chave, valor, transaction);
+      }
+    }
+
+    await transaction.commit();       
     return res.status(200).json({ success: true });
    
   }catch (error: any) {
@@ -40,7 +46,7 @@ export const listarProdutos = async (req: Request, res: Response) => {
   const id_loja = req.params.id_loja;
 
   try {
-    const produtos= await pegarFuncionarios(id_loja);
+    const produtos= await pegarProdutos(id_loja);
     
     return res.status(200).json({ success: true, produtos: produtos });
   } catch (error: any) {

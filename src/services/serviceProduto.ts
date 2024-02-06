@@ -4,7 +4,7 @@ import { palavraPadronizado } from './helper';
 
 
 //cadastra um novo produto
-export const criarProduto = async (id_loja: string, nome: string, avatar: string, descricao: string, categoria: string ) => {
+export const criarProduto = async (id_loja: string, nome: string, avatar: string, descricao: string, categoria: string, transaction: any) => {
 
   const nomePadronizado = palavraPadronizado(nome);
 
@@ -15,8 +15,8 @@ export const criarProduto = async (id_loja: string, nome: string, avatar: string
       avatar: avatar ?? null,
       descricao: descricao ?? null,
       categoria,
-      status: "ativo",
-    });
+      status: 'ativo'
+    }, { transaction });
 
     return produto;
     
@@ -26,6 +26,23 @@ export const criarProduto = async (id_loja: string, nome: string, avatar: string
 }
 
 
+export const registrarTamPreco = async (id_produto: number, tamanho: string, preco: number, transaction: any ) => {
+
+  try {
+    await Preco.create({
+      id_produto,
+      tamanho,
+      preco
+    }, { transaction });
+
+    return true;
+    
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+/*
 //pega os dados basicos de um usuario
 export const pegarUsuario = async (id_login: number) => {
 
@@ -43,13 +60,12 @@ export const pegarUsuario = async (id_login: number) => {
   } catch (error: any) {
     throw error;
   }
-}
+}*/
 
 
 
 //lista todos os funcionarios de uma loja especifica
 export const pegarProdutos = async (id_loja: string) => {
-
   try {
     const produtos = await Produto.findAll({
       where: {
@@ -60,23 +76,34 @@ export const pegarProdutos = async (id_loja: string) => {
           model: Preco,
           attributes: ['tamanho', 'preco']
         },
-      
       ],
       raw: true
-  });
-  
-    const produtosFormatados = produtos.map((produto: any) => {
-      return {
-        id_produto: produto.id_produto,
-        nome: produto.nome,
-        avatar: produto.avatar,
-        descricao: produto.descricao,
-        genero: produto.categoria,
-        tipo: produto.status,
-        preco: produto['Preco.preco'],
-        tamanho: produto['Preco.tamanho'],
-      };
     });
+
+  
+    const produtosFormatados = produtos.reduce((acc: any, produto: any) => {
+      const produtoExistente = acc.find((p: any) => p.id_produto === produto.id_produto);
+
+      if (produtoExistente) {
+        // Produto já existe, adicione o preço ao objeto de preços
+        produtoExistente.precos[produto['Precos.tamanho']] = parseFloat(produto['Precos.preco']);
+      } else {
+        // Produto ainda não existe, crie um novo objeto de produto
+        acc.push({
+          id_produto: produto.id_produto,
+          nome: produto.nome,
+          avatar: produto.avatar,
+          descricao: produto.descricao,
+          categoria: produto.categoria,
+          status: produto.status,
+          precos: {
+            [produto['Precos.tamanho']]: parseFloat(produto['Precos.preco']),
+          },
+        });
+      }
+
+      return acc;
+    }, []);
     
     return produtosFormatados;
     
@@ -84,6 +111,7 @@ export const pegarProdutos = async (id_loja: string) => {
     throw error;
   }
 }
+
 
 
 
