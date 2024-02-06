@@ -13,7 +13,7 @@ export interface ProdutoInstance extends Model {
 }
 
 
-export const Produto= sequelize.define<ProdutoInstance>('Loja', {
+export const Produto= sequelize.define<ProdutoInstance>('Produto', {
     id_produto: {
         primaryKey: true,
         autoIncrement: true,

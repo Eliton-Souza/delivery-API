@@ -10,7 +10,7 @@ export interface PrecoInstance extends Model {
 }
 
 
-export const Preco= sequelize.define<PrecoInstance>('Loja', {
+export const Preco= sequelize.define<PrecoInstance>('Preco', {
     id_preco: {
         primaryKey: true,
         autoIncrement: true,
