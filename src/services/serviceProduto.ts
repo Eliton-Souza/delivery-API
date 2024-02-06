@@ -1,6 +1,6 @@
 import { Preco } from '../models/Preco';
 import { Produto } from '../models/Produto';
-import { palavraPadronizado } from './helper';
+import { formataProdutos, palavraPadronizado } from './helper';
 
 
 //cadastra um novo produto
@@ -64,7 +64,7 @@ export const pegarUsuario = async (id_login: number) => {
 
 
 
-//lista todos os funcionarios de uma loja especifica
+//lista todos os produtos de uma loja pelo id_loja
 export const pegarProdutos = async (id_loja: string) => {
   try {
     const produtos = await Produto.findAll({
@@ -81,29 +81,8 @@ export const pegarProdutos = async (id_loja: string) => {
     });
 
   
-    const produtosFormatados = produtos.reduce((acc: any, produto: any) => {
-      const produtoExistente = acc.find((p: any) => p.id_produto === produto.id_produto);
-
-      if (produtoExistente) {
-        // Produto já existe, adicione o preço ao objeto de preços
-        produtoExistente.precos[produto['Precos.tamanho']] = parseFloat(produto['Precos.preco']);
-      } else {
-        // Produto ainda não existe, crie um novo objeto de produto
-        acc.push({
-          id_produto: produto.id_produto,
-          nome: produto.nome,
-          avatar: produto.avatar,
-          descricao: produto.descricao,
-          categoria: produto.categoria,
-          status: produto.status,
-          precos: {
-            [produto['Precos.tamanho']]: parseFloat(produto['Precos.preco']),
-          },
-        });
-      }
-
-      return acc;
-    }, []);
+  
+    const produtosFormatados = formataProdutos(produtos);
     
     return produtosFormatados;
     

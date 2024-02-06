@@ -40,7 +40,7 @@ export const cadastrarProduto = async (req: Request, res: Response) => {
 
 
   
-
+//lista todos os produtos de uma loja com base no id_loja
 export const listarProdutos = async (req: Request, res: Response) => {
 
   const id_loja = req.params.id_loja;
