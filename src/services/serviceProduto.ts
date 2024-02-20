@@ -1,10 +1,10 @@
-import { Preco } from '../models/Preco';
+import { Op } from 'sequelize';
 import { Produto } from '../models/Produto';
-import { formataProdutos, palavraPadronizado } from './helper';
+import { palavraPadronizado } from './helper';
 
 
 //cadastra um novo produto
-export const criarProduto = async (id_loja: string, nome: string, avatar: string, descricao: string, categoria: string, transaction: any) => {
+export const criarProduto = async (id_loja: string, nome: string, imagem: string, descricao: string, tipo: string, categoria: string, preco: number) => {
 
   const nomePadronizado = palavraPadronizado(nome);
 
@@ -12,11 +12,13 @@ export const criarProduto = async (id_loja: string, nome: string, avatar: string
     const produto = await Produto.create({
       nome: nomePadronizado,
       id_loja,
-      avatar: avatar ?? null,
+      imagem: imagem ?? null,
       descricao: descricao ?? null,
+      tipo,
       categoria,
+      preco,
       status: 'ativo'
-    }, { transaction });
+    });
 
     return produto;
     
@@ -25,22 +27,24 @@ export const criarProduto = async (id_loja: string, nome: string, avatar: string
   }
 }
 
-
-export const registrarTamPreco = async (id_produto: number, tamanho: string, preco: number, transaction: any ) => {
+// atualiza o valor na tabela produto para o preço minimo
+export const atualizaPrecoMin = async (id_produto: number, valor: number, transaction: any ) => {
 
   try {
-    await Preco.create({
-      id_produto,
-      tamanho,
-      preco
-    }, { transaction });
+    const produto = await Produto.findByPk(id_produto);
 
+    if (valor && produto && produto.tipo!="fixo" && (produto.preco > valor || produto.preco==0)) {
+      produto.preco= valor;
+      await produto.save(transaction);
+    }
+    
     return true;
     
   } catch (error: any) {
     throw error;
   }
 }
+
 
 /*
 //pega os dados basicos de um usuario
@@ -69,22 +73,15 @@ export const pegarProdutos = async (id_loja: string) => {
   try {
     const produtos = await Produto.findAll({
       where: {
-        id_loja
+        id_loja: id_loja,
+        status: {
+          [Op.ne]: 'arquivado'
+        }
       },
-      include: [
-        {
-          model: Preco,
-          attributes: ['tamanho', 'preco']
-        },
-      ],
       raw: true
     });
-
-  
-  
-    const produtosFormatados = formataProdutos(produtos);
     
-    return produtosFormatados;
+    return produtos;
     
   } catch (error: any) {
     throw error;
@@ -104,7 +101,7 @@ export const alterarProduto = async (id_produto: string, nome: string, avatar: s
       if(produto.id_loja == id_loja){
 
         produto.nome= nome ?? produto.nome;
-        produto.avatar= avatar ?? produto.avatar;
+        produto.imagem= avatar ?? produto.imagem;
         produto.descricao= descricao ?? produto.descricao;
         produto.categoria= categoria ?? produto.categoria;
       }
