@@ -9,6 +9,8 @@ export interface LojaInstance extends Model {
     aberto: boolean;
     nota: number;
     tipo: string;   //restaurante, comercial, agropecuaria, açougue, farmacia
+    logo: string;
+    capa: string;
 }
 
 
@@ -42,6 +44,14 @@ export const Loja= sequelize.define<LojaInstance>('Loja', {
     tipo: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    logo: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    capa: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
 }, {
     tableName: 'Loja',
