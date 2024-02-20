@@ -4,6 +4,7 @@ import * as LojaController from '../controllers/lojaController';
 import * as VerificacaoController from '../controllers/verificacaoController';
 import * as FileController from '../controllers/fileController';
 import * as ProdutoController from '../controllers/produtoController';
+import * as SaborController from '../controllers/saborController';
 
 import * as valida from '../middlewares/validaSchema';
 
@@ -23,9 +24,16 @@ router.post('/usuario', UsuarioController.cadastrarUsuario);
 router.get('/usuario/:id_loja', verificarToken, UsuarioController.listarFuncionarios);
 router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFuncionário);
 
+//PRODUTO
 router.post('/produto', verificarToken, ProdutoController.cadastrarProduto);
 router.get('/produtos/:id_loja', ProdutoController.listarProdutos);
 router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarProduto);
+
+//SABORES
+router.post('/sabor', verificarToken, SaborController.cadastrarSabor);
+router.get('/sabores/:id_produto', SaborController.listarSabores);
+//router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarProduto);
+
 
 //CRUD LOJA
 router.post('/loja', LojaController.cadastrarLoja);

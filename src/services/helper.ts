@@ -1,4 +1,4 @@
-import { ProdutoInstance } from "../models/Produto";
+import { SaborInstance } from "../models/Sabor";
 
 //padroniza nomes
 export const palavraPadronizado = (nome: string) => {
@@ -11,25 +11,25 @@ export const palavraPadronizado = (nome: string) => {
 }
 
 
-export const formataProdutos = (produtos: ProdutoInstance[]) => {
+export const formataSabores = (sabores: SaborInstance[]) => {
 
-  return produtos.reduce((acc: any, produto: any) => {
-    const produtoExistente = acc.find((p: any) => p.id_produto === produto.id_produto);
+  return sabores.reduce((acc: any, sabor: any) => {
+    const saborExistente = acc.find((p: any) => p.id_sabor === sabor.id_sabor);
 
-    if (produtoExistente) {
+    if (saborExistente) {
       // Produto já existe, adicione o preço ao objeto de preços
-      produtoExistente.precos[produto['Precos.tamanho']] = parseFloat(produto['Precos.preco']);
+      saborExistente.precos[sabor['Precos.tamanho']] = parseFloat(sabor['Precos.preco']);
     } else {
       // Produto ainda não existe, crie um novo objeto de produto
       acc.push({
-        id_produto: produto.id_produto,
-        nome: produto.nome,
-        avatar: produto.avatar,
-        descricao: produto.descricao,
-        categoria: produto.categoria,
-        status: produto.status,
+        id_sabor: sabor.id_sabor,
+        nome: sabor.nome,
+        avatar: sabor.avatar,
+        descricao: sabor.descricao,
+        categoria: sabor.categoria,
+        status: sabor.status,
         precos: {
-          [produto['Precos.tamanho']]: parseFloat(produto['Precos.preco']),
+          [sabor['Precos.tamanho']]: parseFloat(sabor['Precos.preco']),
         },
       });
     }
