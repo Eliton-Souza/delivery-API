@@ -9,6 +9,7 @@ export interface SaborInstance extends Model {
     imagem: string;
     status: string;     //ativo, suspenso, arquivado.
     categoria: string;
+    descricao: string;
 }
 
 
@@ -37,6 +38,10 @@ export const Sabor= sequelize.define<SaborInstance>('Sabor', {
     status: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    descricao: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
 }, {
     tableName: 'Sabor',
