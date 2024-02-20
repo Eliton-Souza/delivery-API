@@ -7,7 +7,7 @@ export interface ProdutoInstance extends Model {
     id_loja: number;
     nome: string;    
     imagem: string;
-    tipo: string;       //montavel ou estatico
+    tipo: string;       //montavel ou fixo
     descricao: string;
     preco: number;
     categoria: string;  //pizza, hamburguer, acai
