@@ -56,9 +56,9 @@ export const listarSabores = async (req: Request, res: Response) => {
   try {
     const sabores= await pegarSabores(id_produto);
     
-    return res.status(200).json({ success: true, produtos: sabores });
+    return res.status(200).json({ success: true, sabores: sabores });
   } catch (error: any) {
-    return res.json({success: false, error: "Erro ao encontrar produtos"});
+    return res.json({success: false, error: "Erro ao encontrar sabores"});
   }
 }
 

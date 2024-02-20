@@ -24,7 +24,7 @@ export const formataSabores = (sabores: SaborInstance[]) => {
       acc.push({
         id_sabor: sabor.id_sabor,
         nome: sabor.nome,
-        avatar: sabor.avatar,
+        imagem: sabor.imagem,
         descricao: sabor.descricao,
         categoria: sabor.categoria,
         status: sabor.status,
