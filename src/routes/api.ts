@@ -38,6 +38,7 @@ router.get('/sabores/:id_produto', SaborController.listarSabores);
 //CRUD LOJA
 router.post('/loja', LojaController.cadastrarLoja);
 router.get('/loja/:nome_loja', LojaController.pegarLoja);
+router.get('/lojas', LojaController.listarLojas);
 
 
 router.post('/upload-file', uploadFile.single('file'), FileController.uploadImagem);

@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { Loja } from '../models/Loja';
 
 //cadastra uma nova loja
@@ -34,6 +35,26 @@ export const pegarDadosLoja = async (nome: string) => {
     }
 
     return loja;
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+
+//lista todos os produtos de uma loja pelo id_loja
+export const pegarLojas = async () => {
+  try {
+    const lojas = await Loja.findAll({
+      where: {
+        bloqueado: {
+          [Op.ne]: '1'
+        }
+      },
+      raw: true
+    });
+    
+    return lojas;
+    
   } catch (error: any) {
     throw error;
   }

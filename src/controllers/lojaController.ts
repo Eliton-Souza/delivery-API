@@ -4,7 +4,7 @@ import {
   alterarCargoFuncionario, 
   pegarFuncionarios }
 from '../services/serviceUsuario';
-import { criarLoja, pegarDadosLoja } from '../services/serviceLoja';
+import { criarLoja, pegarDadosLoja, pegarLojas } from '../services/serviceLoja';
 
 
 declare global {
@@ -47,18 +47,17 @@ export const pegarLoja = async (req: Request, res: Response) => {
 
   
 
-export const listarFuncionarios = async (req: Request, res: Response) => {
-
-  const id_loja = req.params.id_loja;
+export const listarLojas = async (req: Request, res: Response) => {
 
   try {
-    const funcionarios= await pegarFuncionarios(id_loja);
+    const lojas= await pegarLojas();
     
-    return res.json({ funcionarios: funcionarios });
+    return res.json({success: true, lojas: lojas });
   } catch (error) {
     return res.json({error: "Erro ao encontrar funcionarios"});
   }
 }
+
 
 
 export const atualizarFuncionário = async (req: Request, res: Response) => {
