@@ -5,6 +5,7 @@ import * as VerificacaoController from '../controllers/verificacaoController';
 import * as FileController from '../controllers/fileController';
 import * as ProdutoController from '../controllers/produtoController';
 import * as SaborController from '../controllers/saborController';
+import * as EnderecoController from '../controllers/enderecoController';
 
 import * as valida from '../middlewares/validaSchema';
 
@@ -23,6 +24,12 @@ router.post('/codigo', VerificacaoController.validaCodigo);
 router.post('/usuario', UsuarioController.cadastrarUsuario);
 router.get('/usuario/:id_loja', verificarToken, UsuarioController.listarFuncionarios);
 router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFuncionário);
+
+//CRUD ENDEREÇO
+router.post('/endereco', verificarToken, EnderecoController.cadastrarEndereco);
+router.get('/endereco', verificarToken, EnderecoController.listarEnderecos);
+//router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFuncionário);
+
 
 //PRODUTO
 router.post('/produto', verificarToken, ProdutoController.cadastrarProduto);

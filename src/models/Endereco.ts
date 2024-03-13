@@ -6,12 +6,14 @@ import { Usuario } from './Usuario';
 export interface EnderecoInstance extends Model{
     id_endereco: number;
     id_usuario: number;
+    estado: string;
     cidade: string;
     bairro: string;
     rua: string;
     numero: string;
     referencia: string;
     descricao: string;
+    status: string;
 }
 
 export const Endereco= sequelize.define<EnderecoInstance>('Endereco', {
@@ -27,6 +29,10 @@ export const Endereco= sequelize.define<EnderecoInstance>('Endereco', {
             model: Usuario,
             key: 'id_usuario'
         }
+    },
+    estado: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     cidade: {
         type: DataTypes.STRING,
@@ -50,6 +56,10 @@ export const Endereco= sequelize.define<EnderecoInstance>('Endereco', {
     },
     descricao: {
         type: DataTypes.STRING(200),
+        allowNull: false
+    },
+    status: {
+        type: DataTypes.STRING,
         allowNull: false
     },
 }, {
