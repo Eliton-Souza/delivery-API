@@ -29,6 +29,7 @@ router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFu
 router.post('/endereco', verificarToken, EnderecoController.cadastrarEndereco);
 router.get('/endereco', verificarToken, EnderecoController.listarEnderecos);
 //router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFuncionário);
+router.delete('/endereco/:id_endereco', verificarToken, EnderecoController.deletarEndereco);
 
 
 //PRODUTO
