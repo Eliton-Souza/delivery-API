@@ -3,7 +3,7 @@ import { palavraPadronizado } from './helper';
 
 
 //cadastra um novo usuario, seja cliente ou cargo de loja
-export const criarUsuario = async (nome: string, sobrenome: string, nascimento: Date, genero: string, id_login: number, tipo: string, id_loja: number, avatar: string, transaction: any) => {
+export const criarUsuario = async (nome: string, sobrenome: string, nascimento: Date, genero: string, id_login: number, avatar: string, transaction: any) => {
 
   const nomePadronizado = palavraPadronizado(nome);
   const sobrenomePadronizado = palavraPadronizado(sobrenome);
@@ -15,8 +15,6 @@ export const criarUsuario = async (nome: string, sobrenome: string, nascimento: 
       nascimento,
       genero,
       id_login,
-      tipo,
-      id_loja: tipo!== 'cliente'? id_loja : null,
       avatar,
     }, { transaction });
 
@@ -48,7 +46,7 @@ export const pegarUsuario = async (id_login: number) => {
 }
 
 
-
+/*
 //lista todos os funcionarios de uma loja especifica
 export const pegarFuncionarios = async (id_loja: string) => {
 
@@ -140,4 +138,4 @@ export const alterarCargoFuncionario = async (id_funcionario: string, id_gerente
   } catch (error: any) {
     throw error;
   }
-}
+}*/

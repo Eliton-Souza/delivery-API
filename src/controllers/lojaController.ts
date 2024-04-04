@@ -1,9 +1,5 @@
 import { Request, Response } from 'express';
 import { dadosUsuario} from '../config/passport';
-import {
-  alterarCargoFuncionario, 
-  pegarFuncionarios }
-from '../services/serviceUsuario';
 import { criarLoja, pegarDadosLoja, pegarLojas } from '../services/serviceLoja';
 
 
@@ -54,12 +50,12 @@ export const listarLojas = async (req: Request, res: Response) => {
     
     return res.json({success: true, lojas: lojas });
   } catch (error) {
-    return res.json({error: "Erro ao encontrar funcionarios"});
+    return res.json({error: "Erro ao listar lojas"});
   }
 }
 
 
-
+/*
 export const atualizarFuncionário = async (req: Request, res: Response) => {
   const id_funcionario = req.params.id_funcionario;
   const id_gerente: number = req.user?.id_usuario || 0;
@@ -74,7 +70,7 @@ export const atualizarFuncionário = async (req: Request, res: Response) => {
       return res.json({ error: 'Erro ao atualizar o funcionário'});
     }  
 };
-
+*/
 
 
 

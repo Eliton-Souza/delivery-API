@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { dadosUsuario } from '../config/passport';
-import { pegar1Funcionario } from '../services/serviceUsuario';
 import { alterarProduto, criarProduto, pegarProdutos } from '../services/serviceProduto';
 
 
@@ -42,6 +41,8 @@ export const listarProdutos = async (req: Request, res: Response) => {
 }
 
 
+  /*
+
 export const atualizarProduto = async (req: Request, res: Response) => {
   const id_produto = req.params.id_produto;
   const id_usuario: number = req.user?.id_usuario || 0;
@@ -59,8 +60,7 @@ export const atualizarProduto = async (req: Request, res: Response) => {
     }  
 };
 
-
-  /*DELETE: VERIFICAR SE O PRODUTO ESTÁ EM ALGUM PEDIDO
+DELETE: VERIFICAR SE O PRODUTO ESTÁ EM ALGUM PEDIDO
     SE SIM: STATUS = ARQUIVADO
     SE NAO: DELETA DO BANCO 
   */

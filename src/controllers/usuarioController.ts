@@ -4,9 +4,7 @@ import { dadosUsuario, gerarPayload, gerarToken } from '../config/passport';
 import { fazerLogin, gerarLogin } from '../services/serviceLogin';
 import { deletaLoginVerificado } from '../services/serviceVerificacao';
 import {
-  alterarCargoFuncionario, 
   criarUsuario,
-  pegarFuncionarios, 
   pegarUsuario}
 from '../services/serviceUsuario';
 
@@ -21,23 +19,18 @@ declare global {
 export const cadastrarUsuario = async (req: Request, res: Response) => {
 
   const transaction = await sequelize.transaction();
-  const { nome, sobrenome, genero, nascimento, email, celular, senha, tipo, id_loja, avatar} = req.body;
+  const { nome, sobrenome, genero, nascimento, email, celular, senha, avatar} = req.body;
 
   try {
     await deletaLoginVerificado(celular);
     const id_login= await gerarLogin(email, celular, senha, transaction);
-    const usuario = await criarUsuario(nome, sobrenome, nascimento, genero, id_login, tipo, id_loja, avatar, transaction);
+    const usuario = await criarUsuario(nome, sobrenome, nascimento, genero, id_login, avatar, transaction);
     await transaction.commit();
 
-    if(tipo == "cliente"){
-       const payload= gerarPayload(usuario.id_usuario, usuario.nome, usuario.sobrenome, usuario.avatar);
-       const token= gerarToken(payload);
-       return res.status(200).json({ success: true, token: token });
-      }
-    else{
-      return res.status(200).json({ success: true });
-    }
-
+    const payload= gerarPayload(usuario.id_usuario, usuario.nome, usuario.sobrenome, usuario.avatar);
+    const token= gerarToken(payload);
+    return res.status(200).json({ success: true, token: token });
+  
   }catch (error: any) {
     await transaction.rollback();
     return res.json({ success: false, error: error.message });
@@ -74,7 +67,7 @@ export const login = async (req: Request, res: Response) => {
 
 
 
-  
+  /*
 
 export const listarFuncionarios = async (req: Request, res: Response) => {
 
@@ -108,7 +101,7 @@ export const atualizarFuncionário = async (req: Request, res: Response) => {
 
 
 
-
+*/
 
 
 
