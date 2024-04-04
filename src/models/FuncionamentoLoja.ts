@@ -11,7 +11,7 @@ export interface FuncionamentoLojaInstance extends Model {
 }
 
 
-export const FuncionamentoLoja= sequelize.define<FuncionamentoLojaInstance>('Loja', {
+export const FuncionamentoLoja= sequelize.define<FuncionamentoLojaInstance>('FuncionamentoLoja', {
     id_funcionamento: {
         primaryKey: true,
         autoIncrement: true,
