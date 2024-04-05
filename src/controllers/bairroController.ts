@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { dadosUsuario } from '../config/passport';
-import { criarBairro } from '../services/serviceBairro';
+import { criarBairro, pegarBairros } from '../services/serviceBairro';
 
 
 declare global {
@@ -26,22 +26,22 @@ export const cadastrarBairro = async (req: Request, res: Response) => {
 
 
   
-  /*
-//lista todos os produtos de uma loja com base no id_loja
-export const listarProdutos = async (req: Request, res: Response) => {
+  
+//lista todos os bairros de uma cidade
+export const listarBairros = async (req: Request, res: Response) => {
 
-  const id_loja = req.params.id_loja;
+  const cidade = req.params.cidade;
 
   try {
-    const produtos= await pegarProdutos(id_loja);
+    const bairros= await pegarBairros(cidade);
     
-    return res.status(200).json({ success: true, produtos: produtos });
+    return res.status(200).json({ success: true, bairros: bairros });
   } catch (error: any) {
-    return res.json({success: false, error: "Erro ao encontrar produtos"});
+    return res.json({success: false, error: "Erro ao encontrar bairros"});
   }
 }
 
-
+/*
 export const atualizarProduto = async (req: Request, res: Response) => {
   const id_produto = req.params.id_produto;
   const id_usuario: number = req.user?.id_usuario || 0;

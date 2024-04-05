@@ -65,19 +65,16 @@ export const pegarUsuario = async (id_login: number) => {
 
 
 //lista todos os produtos de uma loja pelo id_loja
-export const pegarProdutos = async (id_loja: string) => {
+export const pegarBairros = async (cidade: string) => {
   try {
-    const produtos = await Produto.findAll({
+    const bairros = await Bairro.findAll({
       where: {
-        id_loja: id_loja,
-        status: {
-          [Op.ne]: 'arquivado'
-        }
+        cidade
       },
       raw: true
     });
     
-    return produtos;
+    return bairros;
     
   } catch (error: any) {
     throw error;

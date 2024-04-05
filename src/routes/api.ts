@@ -51,7 +51,7 @@ router.get('/lojas', LojaController.listarLojas);
 
 //CRUD BAIRRO
 router.post('/bairro', BairroController.cadastrarBairro);
-router.get('/loja/:nome_loja', LojaController.pegarLoja);
+router.get('/bairro/:cidade', BairroController.listarBairros);
 router.get('/lojas', LojaController.listarLojas);
 
 
