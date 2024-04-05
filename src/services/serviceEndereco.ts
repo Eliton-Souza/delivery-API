@@ -1,3 +1,4 @@
+import { Bairro } from '../models/Bairro';
 import { Endereco } from '../models/Endereco';
 
 //cadastra um novo endereço
@@ -31,10 +32,33 @@ export const pegarEnderecos = async (id_usuario: number) => {
       where: {
         id_usuario
       },
+      include: [
+        {
+          model: Bairro,
+          attributes: ['nome']
+        },
+      ],
+      attributes: { 
+        exclude: ['id_bairro', 'id_usuario'] 
+      },
       raw: true
     });
+
+    const enderecosFormatados = enderecos.map((endereco: any) => {
+      return {
+        id_endereco: endereco.id_endereco,
+        estado: endereco.estado,
+        cidade: endereco.cidade,
+        bairro: endereco['Bairro.nome'],
+        rua: endereco.rua,
+        numero: endereco.numero,
+        referencia: endereco.referencia,
+        descricao: endereco.descricao,
+        coordenadas: endereco.coordenadas
+      };
+    });
     
-    return enderecos;
+    return enderecosFormatados;
     
   } catch (error: any) {
     throw error;
