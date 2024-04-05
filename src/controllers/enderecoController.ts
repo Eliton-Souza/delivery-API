@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { dadosUsuario } from '../config/passport';
-import { alterarProduto } from '../services/serviceProduto';
-import { criarEndereco, deletarArquivarEndereco, pegarEnderecos } from '../services/serviceEndereco';
+import * as ServiceEndereco from '../services/serviceEndereco';
 
 
 declare global {
@@ -14,10 +13,10 @@ declare global {
 export const cadastrarEndereco = async (req: Request, res: Response) => {
   const id_usuario: number = req.user?.id_usuario || 0;
 
-  const { estado, cidade, bairro, rua, numero, referencia, descricao } = req.body;
+  const { estado, cidade, id_bairro, rua, numero, referencia, descricao, latitude, longitude } = req.body;
   
   try {
-    const endereco= await criarEndereco(id_usuario, estado, cidade, bairro, rua, numero, referencia, descricao);
+    const endereco= await ServiceEndereco.criarEndereco(id_usuario, estado, cidade, id_bairro, rua, numero, referencia, descricao, latitude, longitude);
     
     return res.status(200).json({ success: true, endereco: endereco });
    
@@ -34,7 +33,7 @@ export const listarEnderecos = async (req: Request, res: Response) => {
   const id_usuario: number = req.user?.id_usuario || 0;
 
   try {
-    const enderecos= await pegarEnderecos(id_usuario);
+    const enderecos= await ServiceEndereco.pegarEnderecos(id_usuario);
     
     return res.status(200).json({ success: true, enderecos: enderecos });
   } catch (error: any) {
@@ -53,7 +52,7 @@ export const deletarEndereco = async (req: Request, res: Response) => {
   const id_usuario: number = req.user?.id_usuario || 0;
 
   try {
-    await deletarArquivarEndereco(id_endereco, id_usuario);
+    await ServiceEndereco.deletarEndereco(id_endereco, id_usuario);
     
     return res.status(200).json({ success: true });
   } catch (error: any) {

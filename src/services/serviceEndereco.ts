@@ -1,21 +1,19 @@
-import { Op } from 'sequelize';
 import { Endereco } from '../models/Endereco';
 
-
 //cadastra um novo endereço
-export const criarEndereco = async (id_usuario: number, estado: string, cidade: string, bairro: string, rua: string, numero: string, referencia: string, descricao: string) => {
+export const criarEndereco = async (id_usuario: number, estado: string, cidade: string, id_bairro: number, rua: string, numero: string, referencia: string, descricao: string, latitude: string, longitude: string) => {
 
   try {
     const endereco = await Endereco.create({
       id_usuario,
       estado,
       cidade,
-      bairro,
+      id_bairro,
       rua,
       numero,
       referencia,
       descricao,
-      status: 'ativo'
+      coordenadas: (latitude && longitude) ? latitude + ',' + longitude: null,
     });
 
     return endereco;
@@ -31,10 +29,7 @@ export const pegarEnderecos = async (id_usuario: number) => {
   try {
     const enderecos = await Endereco.findAll({
       where: {
-        id_usuario,
-        status: {
-          [Op.ne]: 'arquivado'
-        }
+        id_usuario
       },
       raw: true
     });
@@ -47,9 +42,8 @@ export const pegarEnderecos = async (id_usuario: number) => {
 }
 
 
-//deleta ou arquiva endereço de um cliente
-//FAZER O DE ARQUIVAR QUANDO TIVER FEITO PEDIDO COM O ENDERECO
-export const deletarArquivarEndereco = async (id_endereco: string, id_usuario: number) => {
+//deleta o endereço de um cliente
+export const deletarEndereco = async (id_endereco: string, id_usuario: number) => {
   try {
     const endereco= await Endereco.findByPk(id_endereco);
 

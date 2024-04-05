@@ -1,6 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 import { Usuario } from './Usuario';
+import { Bairro } from './Bairro';
 
 //Endereco
 export interface EnderecoInstance extends Model{
@@ -8,12 +9,12 @@ export interface EnderecoInstance extends Model{
     id_usuario: number;
     estado: string;
     cidade: string;
-    bairro: string;
+    id_bairro: number;
     rua: string;
     numero: string;
     referencia: string;
     descricao: string;
-    status: string;
+    coordenadas: string;
 }
 
 export const Endereco= sequelize.define<EnderecoInstance>('Endereco', {
@@ -38,9 +39,13 @@ export const Endereco= sequelize.define<EnderecoInstance>('Endereco', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    bairro: {
-        type: DataTypes.STRING,
-        allowNull: false
+    id_bairro: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Bairro,
+            key: 'id_bairro'
+        }
     },
     rua: {
         type: DataTypes.STRING,
@@ -58,9 +63,9 @@ export const Endereco= sequelize.define<EnderecoInstance>('Endereco', {
         type: DataTypes.STRING(200),
         allowNull: false
     },
-    status: {
+    coordenadas: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
 }, {
     tableName: 'Endereco',
@@ -69,3 +74,6 @@ export const Endereco= sequelize.define<EnderecoInstance>('Endereco', {
 
 Usuario.hasMany(Endereco, { foreignKey: 'id_usuario' });
 Endereco.belongsTo(Usuario, { foreignKey: 'id_usuario' });
+
+Bairro.hasMany(Endereco, { foreignKey: 'id_bairro' });
+Endereco.belongsTo(Bairro, { foreignKey: 'id_bairro' });
