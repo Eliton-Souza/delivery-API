@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-//Cadastra um produto novo
+//Cadastra um endereço novo
 export const cadastrarEndereco = async (req: Request, res: Response) => {
   const id_usuario: number = req.user?.id_usuario || 0;
 
@@ -41,6 +41,23 @@ export const listarEnderecos = async (req: Request, res: Response) => {
   }
 }
 
+
+//Edita um produto novo
+export const editarEndereco = async (req: Request, res: Response) => {
+  const id_usuario: number = req.user?.id_usuario || 0;
+  const id_endereco = req.params.id_endereco;
+
+  const { estado, cidade, id_bairro, rua, numero, referencia, descricao, latitude, longitude } = req.body;
+  
+  try {
+    const endereco= await ServiceEndereco.editarEndereco(id_usuario, id_endereco, estado, cidade, id_bairro, rua, numero, referencia, descricao, latitude, longitude);
+    
+    return res.status(200).json({ success: true, endereco: endereco });
+   
+  }catch (error: any) {
+    return res.json({ success: false, error: error.message });
+  }
+}
 
 
 

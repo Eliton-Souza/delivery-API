@@ -29,7 +29,7 @@ router.post('/usuario', UsuarioController.cadastrarUsuario);
 //CRUD ENDEREÇO
 router.post('/endereco', verificarToken, EnderecoController.cadastrarEndereco);
 router.get('/endereco', verificarToken, EnderecoController.listarEnderecos);
-//router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFuncionário);
+router.put('/endereco/:id_endereco', verificarToken, EnderecoController.editarEndereco);
 router.delete('/endereco/:id_endereco', verificarToken, EnderecoController.deletarEndereco);
 
 

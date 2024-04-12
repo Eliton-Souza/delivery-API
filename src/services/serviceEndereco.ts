@@ -39,7 +39,7 @@ export const pegarEnderecos = async (id_usuario: number) => {
         },
       ],
       attributes: { 
-        exclude: ['id_bairro', 'id_usuario'] 
+        exclude: ['id_usuario'] 
       },
       raw: true
     });
@@ -49,6 +49,7 @@ export const pegarEnderecos = async (id_usuario: number) => {
         id_endereco: endereco.id_endereco,
         estado: endereco.estado,
         cidade: endereco.cidade,
+        id_bairro: endereco.id_bairro,
         bairro: endereco['Bairro.nome'],
         rua: endereco.rua,
         numero: endereco.numero,
@@ -59,6 +60,42 @@ export const pegarEnderecos = async (id_usuario: number) => {
     });
     
     return enderecosFormatados;
+    
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+
+//edita um endereço
+export const editarEndereco = async (id_usuario: number, id_endereco: string, estado: string, cidade: string, id_bairro: number, rua: string, numero: string, referencia: string, descricao: string, latitude: string, longitude: string) => {
+
+  try {
+    const endereco = await Endereco.findByPk(id_endereco);
+  
+    if (endereco) {
+      if(endereco.id_usuario == id_usuario){
+
+        endereco.estado= estado ?? endereco.estado;
+        endereco.cidade= cidade ?? endereco.cidade;
+        endereco.id_bairro= id_bairro ?? endereco.id_bairro;
+        endereco.rua= rua ?? endereco.rua;
+        endereco.numero= numero ?? endereco.numero;
+        endereco.referencia= referencia ?? endereco.referencia;
+        endereco.descricao= descricao ?? endereco.descricao;
+        endereco.coordenadas= (latitude && longitude) ? latitude + ',' + longitude: '';
+      }
+      else{
+        throw new Error('Você não tem permissão para alterar este endereço');
+      }
+    }
+    else{
+      throw new Error('Endereço não encontrado');
+    }
+
+    // Salvar as alterações no banco de dados
+    await endereco.save();
+    return endereco;
     
   } catch (error: any) {
     throw error;
