@@ -9,6 +9,7 @@ dotenv.config();
 
 export interface dadosUsuario{
     id_usuario: number;
+    id_funcionario: number | null;
     nome: string;
     sobrenome: string;
     avatar: string;
@@ -32,7 +33,7 @@ const jwtStrategy = new JWTStrategy(options, async (payload: dadosUsuario, done)
         return done(null, false);
     }
 
-        // Token válido, passe as informações do usuário decodificadas para a função done
+        // Token válido, passa as informações do usuário decodificadas para a função done
         return done(null, payload);
     });
 
@@ -56,10 +57,11 @@ export const gerarToken= (dados: dadosUsuario) => {
 }
 
 
-export const gerarPayload = (id_usuario: number, nome: string, sobrenome: string, urlAvatar: string) => {
+export const gerarPayload = (id_usuario: number, id_funcionario: number | null, nome: string, sobrenome: string, urlAvatar: string) => {
 
     const payload: dadosUsuario = {
       id_usuario: id_usuario,
+      id_funcionario: id_funcionario,
       nome: nome,
       sobrenome: sobrenome,
       avatar: urlAvatar,
