@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as UsuarioController from '../controllers/usuarioController';
+import * as LoginController from '../controllers/loginController';
 import * as LojaController from '../controllers/lojaController';
 import * as VerificacaoController from '../controllers/verificacaoController';
 import * as FileController from '../controllers/fileController';
@@ -15,7 +16,7 @@ import { uploadFile } from '../middlewares/multerConfig';
 
 const router = Router();
 
-router.post('/login', UsuarioController.login);
+router.post('/login', LoginController.login);
 
 //CODIGO VALIDAÇÃO
 router.post('/celular', VerificacaoController.validaCelular);

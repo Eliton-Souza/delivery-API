@@ -27,7 +27,7 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     const usuario = await criarUsuario(nome, sobrenome, nascimento, genero, id_login, avatar, transaction);
     await transaction.commit();
 
-    const payload= gerarPayload(usuario.id_usuario, usuario.nome, usuario.sobrenome, usuario.avatar);
+    const payload= gerarPayload(usuario.id_usuario, null, usuario.nome, usuario.sobrenome, usuario.avatar);
     const token= gerarToken(payload);
     return res.status(200).json({ success: true, token: token });
   
@@ -36,33 +36,6 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     return res.json({ success: false, error: error.message });
   }
 }
-
-
-//FAZER LOGIN
-export const login = async (req: Request, res: Response) => {
-
-  const { login, senha } = req.body;
-
-  try {
-    
-   const id_login= await fazerLogin(login, senha);
-   const usuario= await pegarUsuario(id_login);
-
-  if(usuario){
-    const payload= gerarPayload(usuario.id_usuario, usuario.nome, usuario.sobrenome, usuario.avatar);
-    const token = gerarToken(payload);
-
-    return res.status(200).json({ success: true, token: token });
-  }
-   
-  throw new Error('Usuario não encontrado'); 
-   
-   
-  } catch (error: any) {
-    return res.json({ success: false, error: error.message });
-  }
-};
-
 
 
 
