@@ -45,10 +45,14 @@ router.get('/sabores/:id_produto', SaborController.listarSabores);
 //router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarProduto);
 
 
-//CRUD LOJA
+//CRUD LOJA CLIENTE
 router.post('/loja', LojaController.cadastrarLoja);
 router.get('/loja/:nome_loja', LojaController.pegarLoja);
 router.get('/lojas', LojaController.listarLojas);
+
+//CRUD LOJA FUNCIONARIO
+router.get('/loja-funcionario', verificarToken, LojaController.pegarLojaFuncionario);
+//router.get('/lojas', LojaController.listarLojas);
 
 //CRUD BAIRRO
 router.post('/bairro', BairroController.cadastrarBairro);

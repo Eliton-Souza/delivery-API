@@ -31,7 +31,7 @@ export const cadastrarFuncionario = async (req: Request, res: Response) => {
 }
 
 
-  
+  /*
 //lista todos os endereços de um usuario
 export const listarEnderecos = async (req: Request, res: Response) => {
 
@@ -80,4 +80,4 @@ export const deletarEndereco = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.json({success: false, error: error.message});
   }
-}
+}*/

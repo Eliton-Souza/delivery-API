@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { dadosUsuario} from '../config/passport';
 import { criarLoja, pegarDadosLoja, pegarLojas } from '../services/serviceLoja';
+import { pegarFuncinario } from '../services/serviceFuncionario';
 
 
 declare global {
@@ -27,7 +28,7 @@ export const cadastrarLoja = async (req: Request, res: Response) => {
 
 
 
-//lista os dados de uma loja com base no nome
+//rota publica, lista os dados de uma loja com base no nome
 export const pegarLoja = async (req: Request, res: Response) => {
 
   const nome_loja = req.params.nome_loja;
@@ -36,6 +37,29 @@ export const pegarLoja = async (req: Request, res: Response) => {
     const loja= await pegarDadosLoja(nome_loja);
     
     return res.status(200).json({ success: true, loja: loja });
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
+
+//rota privada, lista os dados de uma loja com base no id do funcionario que pega o id_loja
+export const pegarLojaFuncionario = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  try {
+    if(id_funcionario && id_usuario){
+      const funcionario= await pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        const loja= await pegarDadosLoja(funcionario.id_loja);
+        return res.status(200).json({ success: true, loja: loja });
+      }
+    }
+
+    throw new Error('Você não tem permissão para acessar os dados desta loja');
+    
   } catch (error: any) {
     return res.json({success: false, error: error.message});
   }

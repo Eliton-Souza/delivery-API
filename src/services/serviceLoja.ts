@@ -21,16 +21,21 @@ export const criarLoja = async (nome: string, tipo: string) => {
   }
 }
 
-// pega os dados de uma loja
-export const pegarDadosLoja = async (nome: string) => {
+// Pega os dados de uma loja com base no nome ou ID da loja
+export const pegarDadosLoja = async (identificador: string | number) => {
+  console.log(identificador);
   try {
-    const loja = await Loja.findOne({
-      where: {
-        nome
-      }
-    });
+    let query = {};
 
-    if(!loja){
+    if (typeof identificador === 'string') {
+      query = { where: { nome: identificador } };
+    } else if (typeof identificador === 'number') {
+      query = { where: { id_loja: identificador } };
+    }
+    console.log(query);
+    const loja = await Loja.findOne(query);
+
+    if (!loja) {
       throw new Error('Loja não encontrada');
     }
 
@@ -40,8 +45,7 @@ export const pegarDadosLoja = async (nome: string) => {
   }
 }
 
-
-//lista todos os produtos de uma loja pelo id_loja
+//lista todas as lojas ativas
 export const pegarLojas = async () => {
   try {
     const lojas = await Loja.findAll({
