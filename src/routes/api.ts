@@ -61,7 +61,9 @@ router.get('/bairro/:cidade', BairroController.listarBairros);
 router.get('/lojas', LojaController.listarLojas);
 
 
+//ARQUIVO
 router.post('/upload-file', uploadFile.single('file'), FileController.uploadImagem);
+router.get('/imagem/:link', verificarToken, FileController.pegarImagem);
 
 
 
