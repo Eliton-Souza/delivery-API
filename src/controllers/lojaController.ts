@@ -68,19 +68,19 @@ export const pegarLojaFuncionario = async (req: Request, res: Response) => {
 
 
 //atualiza as imagens de perfil e capa da loja
-export const atualizarFotosLoja = async (req: Request, res: Response) => {
+export const atualizarImagemPerfilLoja = async (req: Request, res: Response) => {
 
   const id_funcionario: number | null = req.user?.id_funcionario || null;
   const id_usuario: number | null = req.user?.id_usuario || null;
 
-  const { perfil, capa} = req.body;
+  const { linkImagem, tipo} = req.body;
 
   try {
     if(id_funcionario && id_usuario){
       const funcionario= await pegarFuncinario(id_usuario);
 
       if(funcionario){
-        await ServiceLoja.editarFotosLoja(funcionario.id_loja, perfil, capa);
+        await ServiceLoja.editarPerfilLoja(funcionario.id_loja, linkImagem, tipo);
         return res.status(200).json({ success: true });
       }
     }

@@ -66,14 +66,19 @@ export const pegarLojas = async () => {
 
 
 //edita um endereço
-export const editarFotosLoja = async (id_loja: number, perfil: string, capa: string) => {
+export const editarPerfilLoja = async (id_loja: number, linkImagem: string, tipo: string) => {
 
   try {
     const loja = await Loja.findByPk(id_loja);
   
     if (loja) {
-      loja.logo= perfil;
-      loja.capa= capa;
+      if(tipo === "logo"){
+        loja.logo= linkImagem;
+      }else if( tipo === "capa"){
+        loja.capa= linkImagem
+      }else{
+        throw new Error('Tipo de imagem inválido');
+      }
     }
     else{
       throw new Error('Loja não encontrada');
