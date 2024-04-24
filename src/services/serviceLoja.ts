@@ -63,3 +63,26 @@ export const pegarLojas = async () => {
     throw error;
   }
 }
+
+
+//edita um endereço
+export const editarFotosLoja = async (id_loja: number, perfil: string, capa: string) => {
+
+  try {
+    const loja = await Loja.findByPk(id_loja);
+  
+    if (loja) {
+      loja.logo= perfil;
+      loja.capa= capa;
+    }
+    else{
+      throw new Error('Loja não encontrada');
+    }
+
+    // Salvar as alterações no banco de dados
+    await loja.save();
+        
+  } catch (error: any) {
+    throw error;
+  }
+}

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { dadosUsuario} from '../config/passport';
-import { criarLoja, pegarDadosLoja, pegarLojas } from '../services/serviceLoja';
+import * as ServiceLoja from '../services/serviceLoja';
 import { pegarFuncinario } from '../services/serviceFuncionario';
 
 
@@ -17,7 +17,7 @@ export const cadastrarLoja = async (req: Request, res: Response) => {
 
   try {
    
-    const loja = await criarLoja(nome, tipo);
+    const loja = await ServiceLoja.criarLoja(nome, tipo);
   
     return res.json({ sucesso: loja });
 
@@ -34,7 +34,7 @@ export const pegarLoja = async (req: Request, res: Response) => {
   const nome_loja = req.params.nome_loja;
 
   try {
-    const loja= await pegarDadosLoja(nome_loja);
+    const loja= await ServiceLoja.pegarDadosLoja(nome_loja);
     
     return res.status(200).json({ success: true, loja: loja });
   } catch (error: any) {
@@ -53,8 +53,35 @@ export const pegarLojaFuncionario = async (req: Request, res: Response) => {
       const funcionario= await pegarFuncinario(id_usuario);
 
       if(funcionario){
-        const loja= await pegarDadosLoja(funcionario.id_loja);
+        const loja= await ServiceLoja.pegarDadosLoja(funcionario.id_loja);
         return res.status(200).json({ success: true, loja: loja });
+      }
+    }
+
+    throw new Error('Você não tem permissão para acessar os dados desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
+
+
+
+//atualiza as imagens de perfil e capa da loja
+export const atualizarFotosLoja = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const { perfil, capa} = req.body;
+
+  try {
+    if(id_funcionario && id_usuario){
+      const funcionario= await pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        await ServiceLoja.editarFotosLoja(funcionario.id_loja, perfil, capa);
+        return res.status(200).json({ success: true });
       }
     }
 
@@ -70,7 +97,7 @@ export const pegarLojaFuncionario = async (req: Request, res: Response) => {
 export const listarLojas = async (req: Request, res: Response) => {
 
   try {
-    const lojas= await pegarLojas();
+    const lojas= await ServiceLoja.pegarLojas();
     
     return res.json({success: true, lojas: lojas });
   } catch (error) {
