@@ -1,5 +1,6 @@
 import { Op } from 'sequelize';
 import { Loja } from '../models/Loja';
+import { deletarImagemS3 } from './serviceAWS';
 
 //cadastra uma nova loja
 export const criarLoja = async (nome: string, tipo: string) => {
@@ -70,18 +71,26 @@ export const editarPerfilLoja = async (id_loja: number, linkImagem: string, tipo
 
   try {
     const loja = await Loja.findByPk(id_loja);
+    let linkAnterior= null;
   
     if (loja) {
       if(tipo === "logo"){
+        linkAnterior= loja.logo;
         loja.logo= linkImagem;
       }else if( tipo === "capa"){
-        loja.capa= linkImagem
+        linkAnterior= loja.capa;
+        loja.capa= linkImagem;
       }else{
         throw new Error('Tipo de imagem inválido');
       }
     }
     else{
       throw new Error('Loja não encontrada');
+    }
+
+    if(linkAnterior){
+      console.log(linkAnterior);
+      await deletarImagemS3(linkAnterior);
     }
 
     // Salvar as alterações no banco de dados

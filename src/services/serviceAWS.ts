@@ -2,6 +2,7 @@ import { promisify } from 'util';
 import AWS from '../instances/aws_config';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import { extractImageKey } from './helper';
 
 dotenv.config();
 const s3 = new AWS.S3();
@@ -29,3 +30,17 @@ export const uploadAWS= async (path: string, fileName: string) => {
     throw error;
   }
 }
+
+
+export const deletarImagemS3 = async (imageUrl: string) => {
+  
+  const imageKey = extractImageKey(imageUrl);
+
+  const params = {
+    Bucket: 'purus-delivery',
+    Key: imageKey,
+  };
+
+  await s3.deleteObject(params).promise();
+  return true;
+};

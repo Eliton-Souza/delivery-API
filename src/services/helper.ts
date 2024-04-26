@@ -37,3 +37,9 @@ export const formataSabores = (sabores: SaborInstance[]) => {
     return acc;
   }, []);
 }
+
+// Função para extrair a chave do link da imagem
+export const extractImageKey = (imageUrl: string) => {
+  const parts = imageUrl.split('/');
+  return parts[parts.length - 1]; // Último segmento do URL é a chave do objeto
+};
