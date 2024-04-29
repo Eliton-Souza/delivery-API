@@ -6,6 +6,7 @@ export interface LojaInstance extends Model {
     nome: string;
     entrega: string;    //tempo medio de entrega fornecido pela loja | 0= loja nao faz entrega
     bloqueado: boolean;  //pro administrador do sistema bloquear a loja por qualquer motivo
+    contato: string;
     aberto: boolean;
     nota: number;
     tipo: string;   //restaurante, comercial, agropecuaria, açougue, farmacia
@@ -32,6 +33,10 @@ export const Loja= sequelize.define<LojaInstance>('Loja', {
     bloqueado: {
         type: DataTypes.BOOLEAN,
         allowNull: false
+    },
+    contato: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     aberto: {
         type: DataTypes.BOOLEAN,

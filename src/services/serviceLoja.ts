@@ -24,7 +24,6 @@ export const criarLoja = async (nome: string, tipo: string) => {
 
 // Pega os dados de uma loja com base no nome ou ID da loja
 export const pegarDadosLoja = async (identificador: string | number) => {
-  console.log(identificador);
   try {
     let query = {};
 
@@ -33,7 +32,7 @@ export const pegarDadosLoja = async (identificador: string | number) => {
     } else if (typeof identificador === 'number') {
       query = { where: { id_loja: identificador } };
     }
-    console.log(query);
+   
     const loja = await Loja.findOne(query);
 
     if (!loja) {
@@ -89,7 +88,6 @@ export const editarPerfilLoja = async (id_loja: number, linkImagem: string, tipo
     }
 
     if(linkAnterior){
-      console.log(linkAnterior);
       await deletarImagemS3(linkAnterior);
     }
 
