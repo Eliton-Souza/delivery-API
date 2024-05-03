@@ -92,8 +92,34 @@ export const atualizarImagemPerfilLoja = async (req: Request, res: Response) => 
   }
 }
 
-  
 
+
+//rota privada, atualiza nome e contato da loja com base no id do funcionario que pega o id_loja
+export const atualizarNomeContato = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const { nome, contato} = req.body;
+
+  try {
+    if(id_funcionario && id_usuario){
+      const funcionario= await pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        await ServiceLoja.editaNomeContato(funcionario.id_loja, nome, contato);
+        return res.status(200).json({ success: true });
+      }
+    }
+
+    throw new Error('Você não tem permissão para alterar os dados desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
+  
+//ROTA PUBLICA
 export const listarLojas = async (req: Request, res: Response) => {
 
   try {

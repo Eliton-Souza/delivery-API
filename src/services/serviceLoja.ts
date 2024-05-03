@@ -98,3 +98,29 @@ export const editarPerfilLoja = async (id_loja: number, linkImagem: string, tipo
     throw error;
   }
 }
+
+
+
+
+
+//edita um endereço
+export const editaNomeContato = async (id_loja: number, nome: string, contato: string) => {
+
+  try {
+    const loja = await Loja.findByPk(id_loja);
+      
+    if (loja) {
+      loja.nome= nome;
+      loja.contato= contato;
+    }
+    else{
+      throw new Error('Loja não encontrada');
+    }
+    
+    // Salvar as alterações no banco de dados
+    await loja.save();
+        
+  } catch (error: any) {
+    throw error;
+  }
+}

@@ -53,6 +53,8 @@ router.get('/lojas', LojaController.listarLojas);
 //CRUD LOJA FUNCIONARIO
 router.get('/loja-funcionario', verificarToken, LojaController.pegarLojaFuncionario);
 router.put('/loja/imagem', verificarToken, LojaController.atualizarImagemPerfilLoja);
+router.put('/loja/detalhes', verificarToken, LojaController.atualizarNomeContato);
+
 //router.get('/lojas', LojaController.listarLojas);
 
 //CRUD BAIRRO
