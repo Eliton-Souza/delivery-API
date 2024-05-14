@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { dadosUsuario} from '../config/passport';
 import * as ServiceLoja from '../services/serviceLoja';
+import * as ServiceHorario from '../services/serviceHorario';
 import { pegarFuncinario } from '../services/serviceFuncionario';
 
 
@@ -118,6 +119,57 @@ export const atualizarNomeContato = async (req: Request, res: Response) => {
     return res.json({success: false, error: error.message});
   }
 }
+
+//edita uma lista de horarios
+export const editarHorarios = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const { horarios } = req.body;
+
+  try {
+    if(id_funcionario && id_usuario){
+      const funcionario= await pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        await ServiceHorario.editarHorarios(horarios);
+        return res.json({ success: true });
+      }
+    }
+
+    throw new Error('Você não tem permissão para alterar os horarios desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
+
+//cadastra uma lista de horarios ALTERAR PRA CHAMAR NO MOMENTO DA CRIAÇÃO DA LOJA
+export const cadastrarHorarios = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const { horarios } = req.body;
+
+  try {
+    if(id_funcionario && id_usuario){
+      const funcionario= await pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        await ServiceHorario.criarHorarios(funcionario.id_loja, horarios);
+        return res.json({ sucesso: true });
+      }
+    }
+
+    throw new Error('Você não tem permissão para alterar os horarios desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
+
   
 //ROTA PUBLICA
 export const listarLojas = async (req: Request, res: Response) => {

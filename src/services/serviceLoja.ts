@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import { Loja } from '../models/Loja';
 import { deletarImagemS3 } from './serviceAWS';
+import { HorarioLoja } from '../models/HorarioLoja';
 
 //cadastra uma nova loja
 export const criarLoja = async (nome: string, tipo: string) => {
@@ -30,7 +31,18 @@ export const pegarDadosLoja = async (identificador: string | number) => {
     if (typeof identificador === 'string') {
       query = { where: { nome: identificador } };
     } else if (typeof identificador === 'number') {
-      query = { where: { id_loja: identificador } };
+      query = {
+        where: 
+        { id_loja: identificador },
+        include: [
+          {
+            model: HorarioLoja,
+            attributes: { 
+              exclude: ['id_loja']
+            }
+          }
+        ]
+      };
     }
    
     const loja = await Loja.findOne(query);

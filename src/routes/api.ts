@@ -51,9 +51,11 @@ router.get('/loja/:nome_loja', LojaController.pegarLoja);
 router.get('/lojas', LojaController.listarLojas);
 
 //CRUD LOJA FUNCIONARIO
-router.get('/loja-funcionario', verificarToken, LojaController.pegarLojaFuncionario);
+router.get('/loja', verificarToken, LojaController.pegarLojaFuncionario);
 router.put('/loja/imagem', verificarToken, LojaController.atualizarImagemPerfilLoja);
 router.put('/loja/detalhes', verificarToken, LojaController.atualizarNomeContato);
+router.post('/loja/horarios', verificarToken, LojaController.cadastrarHorarios);
+router.put('/loja/horarios', verificarToken, LojaController.editarHorarios);
 
 //router.get('/lojas', LojaController.listarLojas);
 
