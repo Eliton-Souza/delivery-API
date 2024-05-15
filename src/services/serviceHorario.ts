@@ -1,32 +1,32 @@
-import { Op } from 'sequelize';
-import { Loja } from '../models/Loja';
-import { deletarImagemS3 } from './serviceAWS';
 import { HorarioLoja, HorarioLojaInstance } from '../models/HorarioLoja';
 import { sequelize } from '../instances/mysql';
 
-//cadastra uma lista de novos horários
-//REFAZER COM A ALTERAÇÕES
-export const criarHorarios = async (id_loja: number, horarios: HorarioLojaInstance[]) => {
-  try {
-    // Verifique se a lista de elementos não está vazia
-    if (horarios.length === 0) {
-      throw new Error('Lista de horários está vazia.');
-    }
-    console.log(horarios);
+const diasDaSemana= [
+  'segunda-feira',
+  'terça-feira',
+  'quarta-feira',
+  'quinta-feira',
+  'sexta-feira',
+  'sábado',
+  'domingo'
+];
 
-    // Adicione o id_loja a cada objeto FuncionamentoLojaInstance
-    const horariosComIdLoja = horarios.map(horario => ({
-      diaSemana: horario.diaSemana,
-      abertura: horario.abertura1,
-      fechamento: horario.fechamento1,
+//instancia uma lista de horarios para uma nova loja cadastrada
+export const instanciaHorarios = async (id_loja: number, transaction: any) => {
+  try {
+    const horarios = diasDaSemana.map(dia => ({
       id_loja: id_loja,
+      diaSemana: dia,
+      abertura1: null,
+      fechamento1: null,
+      abertura2: null,
+      fechamento2: null,
     }));
 
     // Insira os elementos em lote
-    await HorarioLoja.bulkCreate(horariosComIdLoja);
+    await HorarioLoja.bulkCreate(horarios, { transaction });
 
   } catch (error: any) {
-    console.log(error);
     throw error;
   }
 };
@@ -34,7 +34,7 @@ export const criarHorarios = async (id_loja: number, horarios: HorarioLojaInstan
 
 // Edita horarios com transação
 export const editarHorarios = async (horarios: HorarioLojaInstance[]) => {
-  
+
   const transaction = await sequelize.transaction(); // Inicia a transação
 
   try {
