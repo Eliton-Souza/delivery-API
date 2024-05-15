@@ -1,10 +1,8 @@
-import { Op } from 'sequelize';
-import { Produto } from '../models/Produto';
 import { palavraPadronizado } from './helper';
 import { Bairro } from '../models/Bairro';
 
 
-//cadastra um novo produto
+//cadastra um novo bairro
 export const criarBairro = async ( nome: string, cidade: string) => {
 
   const nomePadronizado = palavraPadronizado(nome);
@@ -23,48 +21,8 @@ export const criarBairro = async ( nome: string, cidade: string) => {
   }
 }
 
-// atualiza o valor na tabela produto para o preço minimo
-export const atualizaPrecoMin = async (id_produto: number, valor: number, transaction: any ) => {
 
-  try {
-    const produto = await Produto.findByPk(id_produto);
-
-    if (valor && produto && produto.tipo!="fixo" && (produto.preco > valor || produto.preco==0)) {
-      produto.preco= valor;
-      await produto.save(transaction);
-    }
-    
-    return true;
-    
-  } catch (error: any) {
-    throw error;
-  }
-}
-
-
-/*
-//pega os dados basicos de um usuario
-export const pegarUsuario = async (id_login: number) => {
-
-  try {
-    const usuario = await Produto.findOne({
-      where: {
-        id_login
-      },
-      attributes: ['id_usuario', 'nome', 'sobrenome', 'avatar'],
-      raw: true
-  });
-    
-    return usuario;
-    
-  } catch (error: any) {
-    throw error;
-  }
-}*/
-
-
-
-//lista todos os produtos de uma loja pelo id_loja
+//lista todos os bairros de uma cidade
 export const pegarBairros = async (cidade: string) => {
   try {
     const bairros = await Bairro.findAll({
@@ -82,33 +40,18 @@ export const pegarBairros = async (cidade: string) => {
 }
 
 
-
-
-//atualiza os dados de um produto
-export const alterarProduto = async (id_produto: string, nome: string, avatar: string, descricao: string, categoria: string, id_loja: number) => {
-
+//lista todos os ids dos bairros (USO INTERNO)
+export const pegarIdsBairros = async (cidade: string) => {
   try {
-    const produto = await Produto.findByPk(id_produto);
-
-    if (produto) {
-      if(produto.id_loja == id_loja){
-
-        produto.nome= nome ?? produto.nome;
-        produto.imagem= avatar ?? produto.imagem;
-        produto.descricao= descricao ?? produto.descricao;
-        produto.categoria= categoria ?? produto.categoria;
-      }
-      else{
-        throw new Error('Esse produto não é seu');
-      }
-    }
-    else{
-      throw new Error('Produto não encontrado');
-    }
-
-    // Salvar as alterações no banco de dados
-    await produto.save();
-    return true;
+    const bairros = await Bairro.findAll({
+      where: {
+        cidade
+      },
+      attributes: ['id_bairro'],
+      raw: true
+    });
+    
+    return bairros;
     
   } catch (error: any) {
     throw error;
