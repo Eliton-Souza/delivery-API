@@ -2,6 +2,8 @@ import { Op } from 'sequelize';
 import { Loja } from '../models/Loja';
 import { deletarImagemS3 } from './serviceAWS';
 import { HorarioLoja } from '../models/HorarioLoja';
+import { format } from 'date-fns';
+import { Produto } from '../models/Produto';
 
 //cadastra uma nova loja
 export const criarLoja = async (nome: string, tipo: string) => {
@@ -29,19 +31,37 @@ export const pegarDadosLoja = async (identificador: string | number) => {
     let query = {};
 
     if (typeof identificador === 'string') {
-      query = { where: { nome: identificador } };
-    } else if (typeof identificador === 'number') {
-      query = {
-        where: 
-        { id_loja: identificador },
+
+    const diaSemanaAM = format(new Date(), 'EEEE', { locale: require('date-fns/locale/pt-BR') });
+
+      query = { 
+        where: { nome: identificador },
         include: [
           {
             model: HorarioLoja,
-            attributes: { 
-              exclude: ['id_loja']
-            }
+            where: { diaSemana: diaSemanaAM },
+            attributes: { exclude: ['id_loja'] }
+          },
+          {
+            model: Produto,
+            where: { status: { [Op.ne]: 'arquivado' }},
+            attributes: { exclude: ['id_loja'] }
           }
         ]
+      };
+    }
+     else if (typeof identificador === 'number') {
+      query = {
+        where: 
+          {id_loja: identificador},
+          include: [
+            {
+              model: HorarioLoja,
+              attributes: { 
+                exclude: ['id_loja']
+              }
+            }
+          ]
       };
     }
    
