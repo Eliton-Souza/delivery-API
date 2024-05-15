@@ -6,17 +6,16 @@ import { format } from 'date-fns';
 import { Produto } from '../models/Produto';
 
 //cadastra uma nova loja
-export const criarLoja = async (nome: string, tipo: string) => {
+export const criarLoja = async (nome: string, tipo: string, transaction: any) => {
 
   try {
     const loja = await Loja.create({
       nome,
-      entrega: 0,
+      entrega: "60 min",
       bloqueado: true,
-      aberto: false,
       nota: null,
       tipo
-    });
+    },{ transaction });
 
     return loja;
     

@@ -54,7 +54,6 @@ router.get('/lojas', LojaController.listarLojas);
 router.get('/loja', verificarToken, LojaController.pegarLojaFuncionario);
 router.put('/loja/imagem', verificarToken, LojaController.atualizarImagemPerfilLoja);
 router.put('/loja/detalhes', verificarToken, LojaController.atualizarNomeContato);
-router.post('/loja/horarios', verificarToken, LojaController.cadastrarHorarios);
 router.put('/loja/horarios', verificarToken, LojaController.editarHorarios);
 
 //router.get('/lojas', LojaController.listarLojas);

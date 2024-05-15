@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import { dadosUsuario} from '../config/passport';
 import * as ServiceLoja from '../services/serviceLoja';
 import * as ServiceHorario from '../services/serviceHorario';
+import * as ServiceTaxas from '../services/serviceTaxaEntrega';
 import { pegarFuncinario } from '../services/serviceFuncionario';
+import { sequelize } from '../instances/mysql';
 
 
 declare global {
@@ -12,18 +14,26 @@ declare global {
 }
 
 
+
 export const cadastrarLoja = async (req: Request, res: Response) => {
 
+  const transaction = await sequelize.transaction();
   const { nome, tipo} = req.body;
+  
 
   try {
    
-    const loja = await ServiceLoja.criarLoja(nome, tipo);
+    const loja = await ServiceLoja.criarLoja(nome, tipo, transaction);
+    await ServiceHorario.instanciaHorarios(loja.id_loja, transaction);
+    await ServiceTaxas.instanciasTaxa(loja.id_loja, "Boca do Acre", transaction);
+
+    await transaction.commit();
   
-    return res.json({ sucesso: loja });
+    return res.status(200).json({ success: true, loja: loja });
 
   }catch (error: any) {
-    return res.json({error: error});
+    await transaction.rollback();
+    return res.json({success: false, error: error.message});
   }
 }
 
@@ -145,31 +155,6 @@ export const editarHorarios = async (req: Request, res: Response) => {
   }
 }
 
-//cadastra uma lista de horarios ALTERAR PRA CHAMAR NO MOMENTO DA CRIAÇÃO DA LOJA
-export const cadastrarHorarios = async (req: Request, res: Response) => {
-
-  const id_funcionario: number | null = req.user?.id_funcionario || null;
-  const id_usuario: number | null = req.user?.id_usuario || null;
-
-  const { horarios } = req.body;
-
-  try {
-    if(id_funcionario && id_usuario){
-      const funcionario= await pegarFuncinario(id_usuario);
-
-      if(funcionario){
-        await ServiceHorario.criarHorarios(funcionario.id_loja, horarios);
-        return res.json({ sucesso: true });
-      }
-    }
-
-    throw new Error('Você não tem permissão para alterar os horarios desta loja');
-    
-  } catch (error: any) {
-    return res.json({success: false, error: error.message});
-  }
-}
-
   
 //ROTA PUBLICA
 export const listarLojas = async (req: Request, res: Response) => {
@@ -184,7 +169,24 @@ export const listarLojas = async (req: Request, res: Response) => {
 }
 
 
+
 /*
+//TESTESSSS
+export const cadastrarTaxas = async (req: Request, res: Response) => {
+
+  const { id_loja } = req.body;
+
+  try {
+    await ServiceHorario.instanciaHorarios(id_loja);
+    
+    return res.json({success: true });
+  } catch (error) {
+    return res.json({error: "Erro ao listar lojas"});
+  }
+}
+
+
+
 export const atualizarFuncionário = async (req: Request, res: Response) => {
   const id_funcionario = req.params.id_funcionario;
   const id_gerente: number = req.user?.id_usuario || 0;

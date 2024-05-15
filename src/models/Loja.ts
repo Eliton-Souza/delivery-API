@@ -4,10 +4,9 @@ import { sequelize } from '../instances/mysql';
 export interface LojaInstance extends Model {
     id_loja: number;
     nome: string;
-    entrega: string;    //tempo medio de entrega fornecido pela loja | 0= loja nao faz entrega
+    entrega: string;    //tempo medio de entrega fornecido pela loja
     bloqueado: boolean;  //pro administrador do sistema bloquear a loja por qualquer motivo
     contato: string;
-    aberto: boolean;
     nota: number;
     tipo: string;   //restaurante, comercial, agropecuaria, açougue, farmacia
     logo: string;
@@ -37,10 +36,6 @@ export const Loja= sequelize.define<LojaInstance>('Loja', {
     contato: {
         type: DataTypes.STRING,
         allowNull: true
-    },
-    aberto: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
     },
     nota: {
         type: DataTypes.FLOAT,
