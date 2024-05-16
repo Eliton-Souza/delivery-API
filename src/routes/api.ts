@@ -9,6 +9,7 @@ import * as ProdutoController from '../controllers/produtoController';
 import * as SaborController from '../controllers/saborController';
 import * as EnderecoController from '../controllers/enderecoController';
 import * as BairroController from '../controllers/bairroController';
+import * as TaxasController from '../controllers/taxasController';
 
 import * as valida from '../middlewares/validaSchema';
 
@@ -66,6 +67,12 @@ router.put('/loja/horarios', verificarToken, LojaController.editarHorarios);
 router.post('/bairro', BairroController.cadastrarBairro);
 router.get('/bairro/:cidade', BairroController.listarBairros);
 router.get('/lojas', LojaController.listarLojas);
+
+
+//CRUD TAXAS DE ENTREGA
+router.get('/taxas', verificarToken, TaxasController.pegarTaxas);
+
+
 
 
 //ARQUIVO

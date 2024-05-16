@@ -1,0 +1,34 @@
+import { Request, Response } from 'express';
+import { dadosUsuario } from '../config/passport';
+import * as ServiceFuncionario from '../services/serviceFuncionario';
+import * as ServiceTaxas from '../services/serviceTaxaEntrega';
+
+declare global {
+  namespace Express {
+    interface User extends dadosUsuario {}
+  }
+}
+
+//Pega todas as taxas de entrega para os bairros de uma loja
+export const pegarTaxas = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  try {
+    if(id_funcionario && id_usuario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+
+      if(funcionario){
+   
+        const taxas= await ServiceTaxas.pegarTaxas(funcionario.id_loja);
+        return res.status(200).json({ success: true, taxas: taxas });
+      }
+    }
+
+    throw new Error('Você não tem permissão para acessar as taxas de entrega desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
