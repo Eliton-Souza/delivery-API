@@ -3,8 +3,10 @@ import { dadosUsuario} from '../config/passport';
 import * as ServiceLoja from '../services/serviceLoja';
 import * as ServiceHorario from '../services/serviceHorario';
 import * as ServiceTaxas from '../services/serviceTaxaEntrega';
-import { pegarFuncinario } from '../services/serviceFuncionario';
+import * as ServiceFuncionario from '../services/serviceFuncionario';
 import { sequelize } from '../instances/mysql';
+import { pegarIdLoginUsuario } from '../services/serviceLogin';
+import { pegarUsuario } from '../services/serviceUsuario';
 
 
 declare global {
@@ -18,18 +20,23 @@ declare global {
 export const cadastrarLoja = async (req: Request, res: Response) => {
 
   const transaction = await sequelize.transaction();
-  const { nome, tipo} = req.body;
+  const { nome, tipo,  celular} = req.body;
   
-
   try {
    
     const loja = await ServiceLoja.criarLoja(nome, tipo, transaction);
     await ServiceHorario.instanciaHorarios(loja.id_loja, transaction);
     await ServiceTaxas.instanciasTaxa(loja.id_loja, "Boca do Acre", transaction);
 
-    await transaction.commit();
+    const id_loginNovoFuncionario= await pegarIdLoginUsuario(celular);
+    const usuario= await pegarUsuario(id_loginNovoFuncionario);
+
+    if(usuario){
+      await ServiceFuncionario.criarFuncionario(loja.id_loja, usuario.id_usuario, "gerente", transaction);
   
-    return res.status(200).json({ success: true, loja: loja });
+      await transaction.commit();
+      return res.status(200).json({ success: true, loja: loja });
+    }
 
   }catch (error: any) {
     await transaction.rollback();
@@ -61,7 +68,7 @@ export const pegarLojaFuncionario = async (req: Request, res: Response) => {
 
   try {
     if(id_funcionario && id_usuario){
-      const funcionario= await pegarFuncinario(id_usuario);
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
 
       if(funcionario){
         const loja= await ServiceLoja.pegarDadosLoja(funcionario.id_loja);
@@ -88,7 +95,7 @@ export const atualizarImagemPerfilLoja = async (req: Request, res: Response) => 
 
   try {
     if(id_funcionario && id_usuario){
-      const funcionario= await pegarFuncinario(id_usuario);
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
 
       if(funcionario){
         await ServiceLoja.editarPerfilLoja(funcionario.id_loja, linkImagem, tipo);
@@ -115,7 +122,7 @@ export const atualizarNomeContato = async (req: Request, res: Response) => {
 
   try {
     if(id_funcionario && id_usuario){
-      const funcionario= await pegarFuncinario(id_usuario);
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
 
       if(funcionario){
         await ServiceLoja.editaNomeContato(funcionario.id_loja, nome, contato);
@@ -140,7 +147,7 @@ export const editarHorarios = async (req: Request, res: Response) => {
 
   try {
     if(id_funcionario && id_usuario){
-      const funcionario= await pegarFuncinario(id_usuario);
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
 
       if(funcionario){
         await ServiceHorario.editarHorarios(horarios);
