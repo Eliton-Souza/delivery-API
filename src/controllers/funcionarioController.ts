@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { dadosUsuario } from '../config/passport';
 import * as ServiceFuncionario from '../services/serviceFuncionario';
-
+import { pegarIdLoginUsuario } from '../services/serviceLogin';
+import { pegarUsuario } from '../services/serviceUsuario';
 
 declare global {
   namespace Express {
@@ -9,24 +10,33 @@ declare global {
   }
 }
 
-//Cadastra um funcionario novo
+//Gerente cadastra um novo funcionario
 export const cadastrarFuncionario = async (req: Request, res: Response) => {
-  const id_gerente: number | null = req.user?.id_funcionario || null;
 
-  const { id_usuarioFuncionario, tipo } = req.body;
-  
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const { celular, tipo } = req.body;
+
   try {
-    if(id_gerente){
-      const funcionario= await ServiceFuncionario.criarFuncionario(id_gerente, id_usuarioFuncionario, tipo);
+    if(id_funcionario && id_usuario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        const id_loginNovoFuncionario= await pegarIdLoginUsuario(celular);
+        const usuario= await pegarUsuario(id_loginNovoFuncionario);
+
+        if(usuario){
+          const novoFuncionario= await ServiceFuncionario.criarFuncionario(funcionario.id_loja, usuario.id_usuario, tipo);
+          return res.status(200).json({ success: true, funcionario: novoFuncionario });
+        }
+      }
+    }
+
+    throw new Error('Você não tem permissão para cadastrar um funcionário');
     
-      return res.status(200).json({ success: true, funcionario: funcionario });
-    }
-    else{
-      throw new Error('Você não tem permissão para cadastrar um funcionário');
-    }
-       
-  }catch (error: any) {
-    return res.json({ success: false, error: error.message });
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
   }
 }
 

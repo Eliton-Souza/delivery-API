@@ -49,3 +49,25 @@ export const fazerLogin = async (login: string, senha: string) => {
     throw error;
   }
 };
+
+//pega um id login de usuario utilizando o celular dele
+export const pegarIdLoginUsuario = async (celular: string) => {
+
+  try {
+    const loginUsuario = await Login.findOne({
+      where: {celular},
+      attributes: { 
+        exclude: ['email', 'celular', 'senha']
+    },
+    });
+    
+    if (!loginUsuario) {
+      throw new Error('Usuário não encontrado'); 
+    }
+
+    return loginUsuario.id_login;
+
+  } catch (error: any) {
+    throw error;
+  }
+};

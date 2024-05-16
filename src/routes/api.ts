@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as UsuarioController from '../controllers/usuarioController';
+import * as FuncionarioController from '../controllers/funcionarioController';
 import * as LoginController from '../controllers/loginController';
 import * as LojaController from '../controllers/lojaController';
 import * as VerificacaoController from '../controllers/verificacaoController';
@@ -49,6 +50,9 @@ router.get('/sabores/:id_produto', SaborController.listarSabores);
 router.post('/loja', LojaController.cadastrarLoja);
 router.get('/loja/:nome_loja', LojaController.pegarLoja);
 router.get('/lojas', LojaController.listarLojas);
+
+//CRUD FUNCIONARIO
+router.post('/funcionario', verificarToken, FuncionarioController.cadastrarFuncionario);
 
 //CRUD LOJA FUNCIONARIO
 router.get('/loja', verificarToken, LojaController.pegarLojaFuncionario);
