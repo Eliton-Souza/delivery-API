@@ -3,6 +3,7 @@ import { dadosUsuario } from '../config/passport';
 import * as ServiceFuncionario from '../services/serviceFuncionario';
 import { pegarIdLoginUsuario } from '../services/serviceLogin';
 import { pegarUsuario } from '../services/serviceUsuario';
+import { sequelize } from '../instances/mysql';
 
 declare global {
   namespace Express {
@@ -16,6 +17,8 @@ export const cadastrarFuncionario = async (req: Request, res: Response) => {
   const id_funcionario: number | null = req.user?.id_funcionario || null;
   const id_usuario: number | null = req.user?.id_usuario || null;
 
+  const transaction = await sequelize.transaction();
+
   const { celular, tipo } = req.body;
 
   try {
@@ -27,7 +30,9 @@ export const cadastrarFuncionario = async (req: Request, res: Response) => {
         const usuario= await pegarUsuario(id_loginNovoFuncionario);
 
         if(usuario){
-          const novoFuncionario= await ServiceFuncionario.criarFuncionario(funcionario.id_loja, usuario.id_usuario, tipo);
+          const novoFuncionario= await ServiceFuncionario.criarFuncionario(funcionario.id_loja, usuario.id_usuario, tipo, transaction);
+          
+          await transaction.commit();
           return res.status(200).json({ success: true, funcionario: novoFuncionario });
         }
       }
@@ -36,6 +41,7 @@ export const cadastrarFuncionario = async (req: Request, res: Response) => {
     throw new Error('Você não tem permissão para cadastrar um funcionário');
     
   } catch (error: any) {
+    await transaction.rollback();
     return res.json({success: false, error: error.message});
   }
 }
