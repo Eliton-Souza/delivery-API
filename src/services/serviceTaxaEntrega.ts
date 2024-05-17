@@ -47,7 +47,7 @@ export const pegarTaxas = async (id_loja: number) => {
       return {
         id_taxa: taxa.id_taxa,
         bairro: taxa['Bairro.nome'],
-        taxa: taxa.taxa};
+        taxa: taxa.taxa != null ? Number(taxa.taxa).toFixed(2).replace('.', ',') : null};
     });
     
     return taxasFormatadas;
