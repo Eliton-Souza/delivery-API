@@ -32,3 +32,30 @@ export const pegarTaxas = async (req: Request, res: Response) => {
     return res.json({success: false, error: error.message});
   }
 }
+
+
+//edita uma lista de taxas
+export const editarTaxas = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const { taxas } = req.body;
+
+  try {
+    if(id_funcionario && id_usuario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        console.log(taxas);
+        await ServiceTaxas.editarTaxas(taxas);
+        return res.json({ success: true });
+      }
+    }
+
+    throw new Error('Você não tem permissão para alterar as taxas de entrega desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}

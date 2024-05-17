@@ -1,6 +1,7 @@
 import { pegarIdsBairros } from './serviceBairro';
-import { TaxaEntrega } from '../models/TaxaEntrega';
+import { TaxaEntrega, TaxaEntregaInstance } from '../models/TaxaEntrega';
 import { Bairro } from '../models/Bairro';
+import { sequelize } from '../instances/mysql';
 
 
 export const instanciasTaxa = async (id_loja: number, cidade: string, transaction: any) => {
@@ -56,3 +57,34 @@ export const pegarTaxas = async (id_loja: number) => {
     throw error;
   }
 }
+
+// Edita taxas de entrega com transação
+export const editarTaxas = async (taxas: TaxaEntregaInstance[]) => {
+
+  const transaction = await sequelize.transaction(); // Inicia a transação
+
+  try {
+    for (const novaTaxa of taxas) {
+
+      const taxa = await TaxaEntrega.findByPk(novaTaxa.id_taxa, {
+        transaction,
+        attributes: ['id_taxa','taxa']
+      });
+      
+      if (taxa) {
+        if(novaTaxa.taxa != null){
+          taxa.taxa = parseFloat((novaTaxa.taxa.toString()).replace(',', '.')); // Verifica se o valor é válido antes de atribuir
+        }else{
+          taxa.taxa = null ; 
+        }
+  
+        await taxa.save({ transaction });
+      }
+    }
+    await transaction.commit(); // Confirma a transação após todas as operações serem concluídas
+
+  } catch (error: any) {
+    await transaction.rollback(); // Desfaz a transação em caso de erro
+    throw error;
+  }
+};

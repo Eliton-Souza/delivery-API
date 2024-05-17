@@ -71,6 +71,7 @@ router.get('/lojas', LojaController.listarLojas);
 
 //CRUD TAXAS DE ENTREGA
 router.get('/taxas', verificarToken, TaxasController.pegarTaxas);
+router.put('/taxas', verificarToken, TaxasController.editarTaxas);
 
 
 

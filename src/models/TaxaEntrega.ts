@@ -8,7 +8,7 @@ export interface TaxaEntregaInstance extends Model{
     id_taxa: number;
     id_bairro: number;
     id_loja: number;
-    taxa: number;
+    taxa: number | null;
 }
 
 export const TaxaEntrega= sequelize.define<TaxaEntregaInstance>('TaxaEntrega', {
