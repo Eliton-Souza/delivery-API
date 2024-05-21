@@ -72,8 +72,8 @@ export const editarTaxas = async (taxas: TaxaEntregaInstance[]) => {
       });
       
       if (taxa) {
-        if(novaTaxa.taxa != null){
-          taxa.taxa = parseFloat((novaTaxa.taxa.toString()).replace(',', '.')); // Verifica se o valor é válido antes de atribuir
+        if(novaTaxa.taxa){
+          taxa.taxa = parseFloat((novaTaxa.taxa.toString()).replace(',', '.')); // Converte a string pra float
         }else{
           taxa.taxa = null ; 
         }
