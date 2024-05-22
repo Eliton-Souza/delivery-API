@@ -152,3 +152,24 @@ export const editaNomeContato = async (id_loja: number, nome: string, contato: s
     throw error;
   }
 }
+
+//edita o tempo de entrega da loja
+export const editaTempoEntrega = async (id_loja: number, tempo: string) => {
+
+  try {
+    const loja = await Loja.findByPk(id_loja);
+      
+    if (loja) {
+      loja.entrega= tempo ?? null;
+    }
+    else{
+      throw new Error('Loja não encontrada');
+    }
+    
+    // Salvar as alterações no banco de dados
+    await loja.save();
+        
+  } catch (error: any) {
+    throw error;
+  }
+}
