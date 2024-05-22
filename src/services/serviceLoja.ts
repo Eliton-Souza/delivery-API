@@ -11,7 +11,7 @@ export const criarLoja = async (nome: string, tipo: string, transaction: any) =>
   try {
     const loja = await Loja.create({
       nome,
-      entrega: "60 min",
+      entrega: null,
       bloqueado: true,
       nota: null,
       tipo
@@ -96,7 +96,7 @@ export const pegarLojas = async () => {
 }
 
 
-//edita um endereço
+//edita imagens da loja
 export const editarPerfilLoja = async (id_loja: number, linkImagem: string, tipo: string) => {
 
   try {
@@ -131,10 +131,7 @@ export const editarPerfilLoja = async (id_loja: number, linkImagem: string, tipo
 }
 
 
-
-
-
-//edita um endereço
+//edita nome e contato da loja
 export const editaNomeContato = async (id_loja: number, nome: string, contato: string) => {
 
   try {
