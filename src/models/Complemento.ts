@@ -1,18 +1,18 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
-import { GrupoSabor } from './GrupoSabor';
+import { Grupo } from './Grupo';
 
-export interface SaborInstance extends Model {
-    id_sabor: number;
+export interface ComplementoInstance extends Model {
+    id_complemento: number;
     id_grupo: number;
     nome: string;    
     imagem: string;
-    descricao: string;      //queijo, bacon, tomate...
-    status: string;         //ativado, desativado.
+    descricao: string;      //Sabores de pizza como: 4queijos, moda... adicionais gerais como: bacon, queijo
+    status: boolean;         //ativado, desativado.
 }
 
-export const Sabor= sequelize.define<SaborInstance>('Sabor', {
-    id_sabor: {
+export const Complemento= sequelize.define<ComplementoInstance>('Complemento', {
+    id_complemento: {
         primaryKey: true,
         autoIncrement: true,
         type: DataTypes.INTEGER
@@ -21,7 +21,7 @@ export const Sabor= sequelize.define<SaborInstance>('Sabor', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: GrupoSabor,
+            model: Grupo,
             key: 'id_grupo'
         }
     },
@@ -38,13 +38,13 @@ export const Sabor= sequelize.define<SaborInstance>('Sabor', {
         allowNull: true
     },
     status: {
-        type: DataTypes.STRING,
+        type: DataTypes.BOOLEAN,
         allowNull: false
     },
 }, {
-    tableName: 'Sabor',
+    tableName: 'Complemento',
     timestamps: false
 });
 
-GrupoSabor.hasMany(Sabor, { foreignKey: 'id_grupo' });
-Sabor.belongsTo(GrupoSabor, { foreignKey: 'id_grupo' });
+Grupo.hasMany(Complemento, { foreignKey: 'id_grupo' });
+Complemento.belongsTo(Grupo, { foreignKey: 'id_grupo' });

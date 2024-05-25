@@ -75,7 +75,7 @@ export const pegarProdutos = async (id_loja: string) => {
       where: {
         id_loja: id_loja,
         status: {
-          [Op.ne]: 'arquivado'
+          [Op.ne]: 0
         }
       },
       raw: true

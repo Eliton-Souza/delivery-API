@@ -1,13 +1,13 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 
-export interface GrupoSaborInstance extends Model {
+export interface GrupoInstance extends Model {
     id_grupo: number;
-    nome: string;       //ex: pizzas tradicionais, pizzas doces, bordas..
-    tipo: string;       //ex: borda, coleção de sabores
+    nome: string;       //ex: pizzas tradicionais, pizzas doces, bordas, adicionais..
+    tipo: string;       //ex: borda, coleção de sabores, adicionais
 }
 
-export const GrupoSabor= sequelize.define<GrupoSaborInstance>('GrupoSabor', {
+export const Grupo= sequelize.define<GrupoInstance>('Grupo', {
     id_grupo: {
         primaryKey: true,
         autoIncrement: true,
@@ -22,6 +22,6 @@ export const GrupoSabor= sequelize.define<GrupoSaborInstance>('GrupoSabor', {
         allowNull: false
     },
 }, {
-    tableName: 'GrupoSabor',
+    tableName: 'Grupo',
     timestamps: false
 });

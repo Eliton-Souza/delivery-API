@@ -11,7 +11,7 @@ declare global {
     interface User extends dadosUsuario {}
   }
 }
-
+/*
 
 export const cadastrarSabor = async (req: Request, res: Response) => {
 

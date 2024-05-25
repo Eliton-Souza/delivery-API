@@ -1,4 +1,4 @@
-import { SaborInstance } from "../models/Sabor";
+import { ComplementoInstance } from "../models/Complemento";
 
 //padroniza nomes
 export const palavraPadronizado = (nome: string) => {
@@ -11,7 +11,7 @@ export const palavraPadronizado = (nome: string) => {
 }
 
 
-export const formataSabores = (sabores: SaborInstance[]) => {
+export const formataSabores = (sabores: ComplementoInstance[]) => {
 
   return sabores.reduce((acc: any, sabor: any) => {
     const saborExistente = acc.find((p: any) => p.id_sabor === sabor.id_sabor);

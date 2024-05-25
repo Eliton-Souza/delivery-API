@@ -42,10 +42,11 @@ router.get('/produtos/:id_loja', ProdutoController.listarProdutos);
 //router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarProduto);
 
 //SABORES
+/*
 router.post('/sabor', verificarToken, SaborController.cadastrarSabor);
 router.get('/sabores/:id_produto', SaborController.listarSabores);
 //router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarProduto);
-
+*/
 
 //CRUD LOJA CLIENTE
 router.post('/loja', LojaController.cadastrarLoja);

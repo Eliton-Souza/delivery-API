@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { Preco } from '../models/Preco';
 import { formataSabores, palavraPadronizado } from './helper';
-import { Sabor } from '../models/Sabor';
+import { Complemento } from '../models/Complemento';
 
 //cadastra um novo sabor
 export const criarSabor = async (id_produto: string, nome: string, imagem: string, descricao: string, categoria: string) => {
@@ -9,7 +9,7 @@ export const criarSabor = async (id_produto: string, nome: string, imagem: strin
   const nomePadronizado = palavraPadronizado(nome);
 
   try {
-    const sabor = await Sabor.create({
+    const sabor = await Complemento.create({
       nome: nomePadronizado,
       id_produto,
       imagem: imagem ?? null,
@@ -29,7 +29,7 @@ export const criarSabor = async (id_produto: string, nome: string, imagem: strin
 //lista todos os sabores de um produto
 export const pegarSabores = async (id_produto: string) => {
   try {
-    const sabores = await Sabor.findAll({
+    const sabores = await Complemento.findAll({
       where: {
         id_produto,
         status: {

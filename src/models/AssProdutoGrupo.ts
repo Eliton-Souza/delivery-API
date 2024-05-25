@@ -1,39 +1,39 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
-import { Pizza } from './Pizza';
-import { GrupoSabor } from './GrupoSabor';
+import { Grupo } from './Grupo';
+import { Produto } from './Produto';
 
 //Associação entre as tabelas Pizza e Grupo Sabor
-export interface AssPizzaGrupoSaborInstance extends Model {
-    id_pizzaGrupo: number;
-    id_pizza: number;
+export interface AssProdutoGrupoInstance extends Model {
+    id_produtoGrupo: number;
+    id_produto: number;
     id_grupo: number;
 }
 
-export const AssPizzaGrupoSabor= sequelize.define<AssPizzaGrupoSaborInstance>('AssPizzaGrupoSabor', {
-    id_pizzaGrupo: {
+export const AssProdutoGrupo= sequelize.define<AssProdutoGrupoInstance>('AssProdutoGrupo', {
+    id_produtoGrupo: {
         primaryKey: true,
         autoIncrement: true,
         type: DataTypes.INTEGER
     },
-    id_pizza: {
+    id_produto: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: Pizza,
-            key: 'id_pizza'
+            model: Produto,
+            key: 'id_produto'
         }
     },
     id_grupo: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: GrupoSabor,
+            model: Grupo,
             key: 'id_grupo'
         }
     },
 }, {
-    tableName: 'AssPizzaGrupoSabor',
+    tableName: 'AssProdutoGrupo',
     timestamps: false
 });
 
@@ -45,5 +45,5 @@ GrupoSabor.hasMany(PizzaGrupoSabor, { foreignKey: 'id_grupo' });
 PizzaGrupoSabor.belongsTo(GrupoSabor, { foreignKey: 'id_pizzaGrupo' });*/
 
 // Definir relacionamentos muitos-para-muitos
-Pizza.belongsToMany(GrupoSabor, { through: AssPizzaGrupoSabor, foreignKey: 'id_pizza' });
-GrupoSabor.belongsToMany(Pizza, { through: AssPizzaGrupoSabor, foreignKey: 'id_grupo' });
+Produto.belongsToMany(Grupo, { through: AssProdutoGrupo, foreignKey: 'id_produto' });
+Grupo.belongsToMany(Produto, { through: AssProdutoGrupo, foreignKey: 'id_grupo' });
