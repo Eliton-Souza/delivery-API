@@ -3,6 +3,7 @@ import * as UsuarioController from '../controllers/usuarioController';
 import * as FuncionarioController from '../controllers/funcionarioController';
 import * as LoginController from '../controllers/loginController';
 import * as LojaController from '../controllers/lojaController';
+import * as CategoriaController from '../controllers/categoriaController';
 import * as VerificacaoController from '../controllers/verificacaoController';
 import * as FileController from '../controllers/fileController';
 import * as ProdutoController from '../controllers/produtoController';
@@ -70,9 +71,24 @@ router.get('/bairro/:cidade', BairroController.listarBairros);
 router.get('/lojas', LojaController.listarLojas);
 
 
+
+
+
+//LOJAS------->
+
+router.post('/categoria', verificarToken, CategoriaController.cadastrarCategoria);
+//router.get('/sabores/:id_produto', SaborController.listarSabores);
+//router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarProduto);
+
+
+
+
+
+
 //CRUD TAXAS DE ENTREGA
 router.get('/taxas', verificarToken, TaxasController.pegarTaxas);
 router.put('/taxas', verificarToken, TaxasController.editarTaxas);
+
 
 
 
