@@ -1,17 +1,19 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 import { Loja } from './Loja';
+import { Categoria } from './Categoria';
 
 export interface ProdutoInstance extends Model {
     id_produto: number;
     id_loja: number;
+    id_categoria: number;
     nome: string;    
+    tipo: string;               //pizza, preparado ou industrializado
     imagem: string;
-    tipo: string;       //montavel ou fixo
     descricao: string;
-    preco: number;
-    categoria: string;  //pizza, hamburguer, acai
-    status: string;     //ativo, suspenso, arquivado.
+    status: string;             //ativado, desativado
+    preco: number;              //deletar
+    categoria: string;          //deletar
 }
 
 
@@ -23,9 +25,25 @@ export const Produto= sequelize.define<ProdutoInstance>('Produto', {
     },
     id_loja: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: Loja,
+            key: 'id_loja'
+        }
+    },
+    id_categoria: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Categoria,
+            key: 'id_categoria'
+        }
     },
     nome: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    tipo: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -33,26 +51,23 @@ export const Produto= sequelize.define<ProdutoInstance>('Produto', {
         type: DataTypes.STRING,
         allowNull: true
     },
-    tipo: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
     descricao: {
         type: DataTypes.TEXT,
         allowNull: true
-    },
-    preco: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-    },
-    categoria: {
-        type: DataTypes.STRING,
-        allowNull: false
     },
     status: {
         type: DataTypes.STRING,
         allowNull: false
     },
+    preco: {                    //deletar
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    categoria: {                //deletar
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
 }, {
     tableName: 'Produto',
     timestamps: false
@@ -60,3 +75,6 @@ export const Produto= sequelize.define<ProdutoInstance>('Produto', {
 
 Loja.hasMany(Produto, { foreignKey: 'id_loja' });
 Produto.belongsTo(Loja, { foreignKey: 'id_loja' });
+
+Categoria.hasMany(Produto, { foreignKey: 'id_categoria' });
+Produto.belongsTo(Categoria, { foreignKey: 'id_categoria' });
