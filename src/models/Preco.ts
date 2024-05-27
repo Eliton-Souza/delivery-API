@@ -8,6 +8,7 @@ export interface PrecoInstance extends Model {
     id_produto: number;             
     id_complemento: number;
     preco: number; 
+    uniqueKey: string;
 }
 
 
@@ -37,12 +38,15 @@ export const Preco= sequelize.define<PrecoInstance>('Preco', {
         type: DataTypes.FLOAT,
         allowNull: false
     },
+    uniqueKey: {                        //id_produto + id_complemento = unique
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 }, {
     tableName: 'Preco',
     timestamps: false
 });
 
-//id_produto + id_complemento = unique
 
 Produto.hasMany(Preco, { foreignKey: 'id_produto' });
 Preco.belongsTo(Produto, { foreignKey: 'id_produto' });
