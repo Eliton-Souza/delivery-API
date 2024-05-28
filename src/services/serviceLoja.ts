@@ -4,6 +4,8 @@ import { deletarImagemS3 } from './serviceAWS';
 import { HorarioLoja } from '../models/HorarioLoja';
 import { format } from 'date-fns';
 import { Produto } from '../models/Produto';
+import { Categoria } from '../models/Categoria';
+import { Preco } from '../models/Preco';
 
 //cadastra uma nova loja
 export const criarLoja = async (nome: string, tipo: string, transaction: any) => {
@@ -45,21 +47,50 @@ export const pegarDadosLoja = async (identificador: string | number) => {
             model: Produto,
             where: { status: { [Op.ne]: 'arquivado' }},
             attributes: { exclude: ['id_loja'] }
-          }
+          },
+          {
+            model: Categoria,
+            include: [
+              {
+                model: Produto
+              },
+            ]
+          },
         ]
       };
     }
-     else if (typeof identificador === 'number') {
+     else if (typeof identificador === 'number') {  
       query = {
         where: 
           {id_loja: identificador},
           include: [
             {
-              model: HorarioLoja,
+              model: HorarioLoja,         //melhora: chamar todos os horarios apenas quando funcionario for editar
               attributes: { 
                 exclude: ['id_loja']
               }
-            }
+            },
+            {
+              model: Categoria,
+              attributes: { 
+                exclude: ['id_loja']
+              },
+              include: [
+                {
+                  model: Produto,
+                  separate: true,  // Adiciona separate para produtos
+                  include: [
+                    {
+                      model: Preco,
+                      attributes: ['preco']
+                    },
+                  ]
+                },
+              ],
+            },
+          ],
+          order: [
+            [{ model: Categoria }, 'prioridade', 'DESC']  // Ordena pela prioridade do Categoria
           ]
       };
     }
