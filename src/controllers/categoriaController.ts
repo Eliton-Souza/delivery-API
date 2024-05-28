@@ -23,8 +23,8 @@ export const cadastrarCategoria = async (req: Request, res: Response) => {
       const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
 
       if(funcionario){
-        await ServiceCategoria.criarCategoria(funcionario.id_loja, nome, prioridade);
-        return res.status(200).json({ success: true });
+        const categoria= await ServiceCategoria.criarCategoria(funcionario.id_loja, nome, prioridade);
+        return res.status(200).json({ success: true, categoria: categoria });
       }
     }
 
@@ -35,19 +35,45 @@ export const cadastrarCategoria = async (req: Request, res: Response) => {
   }
 }
 
-  /*
-  
-//lista todos os bairros de uma cidade
-export const listarBairros = async (req: Request, res: Response) => {
 
-  const cidade = req.params.cidade;
+//edita uma lista de horarios
+export const editarPrioridadeCategoria = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const { categorias } = req.body;
 
   try {
-    const bairros= await pegarBairros(cidade);
+    if(id_funcionario && id_usuario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        await ServiceCategoria.editarPrioridadeCategorias(categorias, funcionario.id_loja);
+        return res.json({ success: true });
+      }
+    }
+
+    throw new Error('Você não tem permissão para alterar os horarios desta loja');
     
-    return res.status(200).json({ success: true, bairros: bairros });
   } catch (error: any) {
-    return res.json({success: false, error: "Erro ao encontrar bairros"});
+    return res.json({success: false, error: error.message});
+  }
+}
+
+  
+/*
+//lista todos as categorias e produtos de uma loja
+export const listarCategoriasProdutos = async (req: Request, res: Response) => {
+
+  const id_loja = req.params.id_loja;
+
+  try {
+    const categoriasProdutos= await ServiceCategoria.pegarCategoriasProdutos(Number(id_loja));
+    
+    return res.status(200).json({ success: true, categoriasProdutos: categoriasProdutos });
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
   }
 }
 
