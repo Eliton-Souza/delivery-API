@@ -8,6 +8,7 @@ export interface AssProdutoGrupoInstance extends Model {
     id_produtoGrupo: number;
     id_produto: number;
     id_grupo: number;
+    qtdSelecionaveis: number;
 }
 
 export const AssProdutoGrupo= sequelize.define<AssProdutoGrupoInstance>('AssProdutoGrupo', {
@@ -31,6 +32,10 @@ export const AssProdutoGrupo= sequelize.define<AssProdutoGrupoInstance>('AssProd
             model: Grupo,
             key: 'id_grupo'
         }
+    },
+    qtdSelecionaveis: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
 }, {
     tableName: 'AssProdutoGrupo',

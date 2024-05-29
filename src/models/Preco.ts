@@ -1,16 +1,15 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
-import { Complemento } from './Complemento';
 import { Produto } from './Produto';
+import { Sabor } from './Sabor';
 
 export interface PrecoInstance extends Model {
     id_preco: number;
     id_produto: number;             
-    id_complemento: number;
+    id_sabor: number;
     preco: number; 
     uniqueKey: string;
 }
-
 
 export const Preco= sequelize.define<PrecoInstance>('Preco', {
     id_preco: {
@@ -26,12 +25,12 @@ export const Preco= sequelize.define<PrecoInstance>('Preco', {
             key: 'id_produto'
         }
     },
-    id_complemento: {
+    id_sabor: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: Complemento,
-            key: 'id_complemento'
+            model: Sabor,
+            key: 'id_sabor'
         }
     },
     preco: {
@@ -51,5 +50,5 @@ export const Preco= sequelize.define<PrecoInstance>('Preco', {
 Produto.hasMany(Preco, { foreignKey: 'id_produto' });
 Preco.belongsTo(Produto, { foreignKey: 'id_produto' });
 
-Complemento.hasMany(Preco, { foreignKey: 'id_complemento' });
-Preco.belongsTo(Complemento, { foreignKey: 'id_complemento' });
+Sabor.hasMany(Preco, { foreignKey: 'id_sabor' });
+Preco.belongsTo(Sabor, { foreignKey: 'id_sabor' });
