@@ -4,21 +4,20 @@ import { palavraPadronizado } from './helper';
 
 
 //cadastra um novo produto
-export const criarProduto = async (id_loja: string, nome: string, imagem: string, descricao: string, tipo: string, categoria: string, preco: number) => {
+export const criarProduto = async (nome: string, tipo: string, id_categoria: string, descricao: string, transaction: any ) => {
 
   const nomePadronizado = palavraPadronizado(nome);
+  const descricaoPadronizada= descricao.replace(/\n+/g, ' ');
 
   try {
     const produto = await Produto.create({
       nome: nomePadronizado,
-      id_loja,
-      imagem: imagem ?? null,
-      descricao: descricao ?? null,
       tipo,
-      categoria,
-      preco,
-      status: 'ativo'
-    });
+      id_categoria,
+      descricao: descricao ? descricaoPadronizada : null,
+      status: 0,
+      imagem: null
+    }, { transaction });
 
     return produto;
     

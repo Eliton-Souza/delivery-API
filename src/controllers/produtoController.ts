@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import { dadosUsuario } from '../config/passport';
 import { alterarProduto, criarProduto, pegarProdutos } from '../services/serviceProduto';
-
+import * as ServiceFuncionario from '../services/serviceFuncionario';
+import { sequelize } from '../instances/mysql';
+import { registrarPreco } from '../services/servicePreco';
+import { pegaCategoria } from '../services/serviceCategoria';
 
 declare global {
   namespace Express {
@@ -12,15 +15,33 @@ declare global {
 //Cadastra um produto novo
 export const cadastrarProduto = async (req: Request, res: Response) => {
 
-  const { id_loja, nome, imagem, descricao, tipo, categoria, preco } = req.body;
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const transaction = await sequelize.transaction();
+
+  const { nome, preco, tipo, id_categoria, descricao } = req.body;;
   
   try {
-    const produto= await criarProduto(id_loja, nome, imagem, descricao, tipo, categoria, preco);
+    if(id_funcionario && id_usuario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+      const categoria= await pegaCategoria(id_categoria);
+
+      if(funcionario && categoria && funcionario.id_loja == categoria.id_loja){
+        
+        const produto= await criarProduto(nome, tipo, id_categoria, descricao, transaction);
+        await registrarPreco(produto.id_produto, null, preco, transaction);
+
+        await transaction.commit();
+        return res.status(200).json({ success: true });
+      }
+    }
+
+    throw new Error('Você não tem permissão para acessar/alterar os dados desta loja');
     
-    return res.status(200).json({ success: true, produto: produto });
-   
-  }catch (error: any) {
-    return res.json({ success: false, error: error.message });
+  } catch (error: any) {
+    await transaction.rollback();
+    return res.json({success: false, error: error.message});
   }
 }
 

@@ -25,7 +25,7 @@ export const Produto= sequelize.define<ProdutoInstance>('Produto', {
     },
     id_loja: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: Loja,
             key: 'id_loja'
@@ -61,11 +61,11 @@ export const Produto= sequelize.define<ProdutoInstance>('Produto', {
     },
     preco: {                    //deletar
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: true
     },
     categoria: {                //deletar
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
 
 }, {
