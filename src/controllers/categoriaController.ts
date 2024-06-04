@@ -62,16 +62,25 @@ export const editarPrioridadeCategoria = async (req: Request, res: Response) => 
 }
 
   
-/*
-//lista todos as categorias e produtos de uma loja
-export const listarCategoriasProdutos = async (req: Request, res: Response) => {
 
-  const id_loja = req.params.id_loja;
+//lista todos as categorias de uma loja
+export const listarCategorias = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
 
   try {
-    const categoriasProdutos= await ServiceCategoria.pegarCategoriasProdutos(Number(id_loja));
+    if(id_funcionario && id_usuario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        const categorias= await ServiceCategoria.pegarCategorias(funcionario.id_loja);
+        return res.json({ success: true, categorias: categorias });
+      }
+    }
+
+    throw new Error('Você não tem permissão para acessar os dados desta loja');
     
-    return res.status(200).json({ success: true, categoriasProdutos: categoriasProdutos });
   } catch (error: any) {
     return res.json({success: false, error: error.message});
   }

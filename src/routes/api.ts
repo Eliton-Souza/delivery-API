@@ -79,7 +79,7 @@ router.get('/lojas', LojaController.listarLojas);
 //Categoria
 router.post('/categoria', verificarToken, CategoriaController.cadastrarCategoria);
 router.put('/prioridadeCategoria', verificarToken, CategoriaController.editarPrioridadeCategoria);
-//router.get('/categoriaProdutos/:id_loja', CategoriaController.listarCategoriasProdutos);
+router.get('/categoria', verificarToken, CategoriaController.listarCategorias);
 
 
 

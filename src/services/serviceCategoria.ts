@@ -50,30 +50,44 @@ export const editarPrioridadeCategorias = async (categorias: CategoriaInstance[]
 };
 
 
-/*
-//lista todos as categorias e produtos de uma loja
-export const pegarCategoriasProdutos = async (id_loja: number) => {
+
+//lista todos as categorias de uma loja
+export const pegarCategorias = async (id_loja: number) => {
   try {
-    const categoriasProdutos = await Categoria.findAll({
+    const categorias = await Categoria.findAll({
       where: {
         id_loja
       },
-      include: [
-        {
-          model: Produto
-        },
-      ],
+      attributes: { 
+        exclude: ['prioridade'] 
+      },
       raw: true
     });
     
-    return categoriasProdutos;
+    return categorias;
     
   } catch (error: any) {
     throw error;
   }
 }
 
+//lista uma categoria de loja - Uso por segurança interna
+export const pegaCategoria = async (id_categoria: number) => {
+  try {
+    const categoria = await Categoria.findByPk(id_categoria,
+      {
+      attributes: ['id_loja'],
+      raw: true
+    });
 
+    return categoria;
+    
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+/*
 //lista todos os ids dos bairros (USO INTERNO)
 export const pegarIdsBairros = async (cidade: string) => {
   try {
