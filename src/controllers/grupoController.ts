@@ -35,3 +35,26 @@ export const criarGrupos = async (req: Request, res: Response) => {
     return res.json({success: false, error: error.message});
   }
 }
+
+//Lista todos os grupos de uma loja
+export const pegarGrupos = async (req: Request, res: Response) => {
+
+  const id_funcionario: number | null = req.user?.id_funcionario || null;
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  try {
+    if(id_funcionario && id_usuario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        const grupos= await ServiceGrupo.pegarGrupos(funcionario.id_loja);
+        return res.status(200).json({ success: true, grupos: grupos });
+      }
+    }
+
+    throw new Error('Você não tem permissão para acessar os dados desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}

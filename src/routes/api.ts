@@ -84,8 +84,9 @@ router.get('/categoria', verificarToken, CategoriaController.listarCategorias);
 
 //Categoria
 router.post('/grupo', verificarToken, GrupoController.criarGrupos);
+router.get('/grupo', verificarToken, GrupoController.pegarGrupos);
 //router.put('/prioridadeCategoria', verificarToken, CategoriaController.editarPrioridadeCategoria);
-//router.get('/categoria', verificarToken, CategoriaController.listarCategorias);
+
 
 
 
