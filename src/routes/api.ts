@@ -4,6 +4,7 @@ import * as FuncionarioController from '../controllers/funcionarioController';
 import * as LoginController from '../controllers/loginController';
 import * as LojaController from '../controllers/lojaController';
 import * as CategoriaController from '../controllers/categoriaController';
+import * as GrupoController from '../controllers/grupoController';
 import * as VerificacaoController from '../controllers/verificacaoController';
 import * as FileController from '../controllers/fileController';
 import * as ProdutoController from '../controllers/produtoController';
@@ -80,6 +81,12 @@ router.get('/lojas', LojaController.listarLojas);
 router.post('/categoria', verificarToken, CategoriaController.cadastrarCategoria);
 router.put('/prioridadeCategoria', verificarToken, CategoriaController.editarPrioridadeCategoria);
 router.get('/categoria', verificarToken, CategoriaController.listarCategorias);
+
+//Categoria
+router.post('/grupo', verificarToken, GrupoController.criarGrupos);
+//router.put('/prioridadeCategoria', verificarToken, CategoriaController.editarPrioridadeCategoria);
+//router.get('/categoria', verificarToken, CategoriaController.listarCategorias);
+
 
 
 
