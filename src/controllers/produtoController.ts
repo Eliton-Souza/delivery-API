@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import { dadosUsuario } from '../config/passport';
-import { alterarProduto, criarProduto, pegarProdutos } from '../services/serviceProduto';
+import { criarProduto, pegarProdutos } from '../services/serviceProduto';
 import * as ServiceFuncionario from '../services/serviceFuncionario';
 import { sequelize } from '../instances/mysql';
 import { registrarPreco } from '../services/servicePreco';
 import { pegaCategoria } from '../services/serviceCategoria';
+import { deletarImagemS3 } from '../services/serviceAWS';
 
 declare global {
   namespace Express {
@@ -20,7 +21,7 @@ export const cadastrarProduto = async (req: Request, res: Response) => {
 
   const transaction = await sequelize.transaction();
 
-  const { nome, preco, tipo, id_categoria, descricao } = req.body;;
+  const { nome, preco, tipo, id_categoria, imagem, descricao } = req.body;;
   
   try {
     if(id_funcionario && id_usuario){
@@ -28,8 +29,8 @@ export const cadastrarProduto = async (req: Request, res: Response) => {
       const categoria= await pegaCategoria(id_categoria);
 
       if(funcionario && categoria && funcionario.id_loja == categoria.id_loja){
-        
-        const produto= await criarProduto(nome, tipo, id_categoria, descricao, transaction);
+
+        const produto= await criarProduto(nome, tipo, id_categoria, imagem, descricao, transaction);
         await registrarPreco(produto.id_produto, null, preco, transaction);
 
         await transaction.commit();
@@ -40,6 +41,9 @@ export const cadastrarProduto = async (req: Request, res: Response) => {
     throw new Error('Você não tem permissão para acessar/alterar os dados desta loja');
     
   } catch (error: any) {
+    if(imagem){
+      await deletarImagemS3(imagem);
+    }
     await transaction.rollback();
     return res.json({success: false, error: error.message});
   }
