@@ -5,9 +5,7 @@ import { Grupo } from './Grupo';
 export interface ComplementoInstance extends Model {
     id_complemento: number;
     id_grupo: number;
-    nome: string;           //bacon, ovos, queijo
-    imagem: string;
-    descricao: string;      // 50g bacon, 1 ovo frito...
+    nome: string;           //50g de bacon, 1 ovo, 50g de queijo
     status: boolean;         //ativado, desativado.
     preco: number; 
 }
@@ -29,14 +27,6 @@ export const Complemento= sequelize.define<ComplementoInstance>('Complemento', {
     nome: {
         type: DataTypes.STRING,
         allowNull: false
-    },
-    imagem: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    descricao: {
-        type: DataTypes.STRING,
-        allowNull: true
     },
     status: {
         type: DataTypes.BOOLEAN,
