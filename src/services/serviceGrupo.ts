@@ -35,6 +35,18 @@ export const pegarGrupos = async (id_loja: number) => {
   }
 }
 
+//pega os dados de 1 grupo --Uso interno
+export const pegaGrupo = async (id_grupo: number) => {
+  try {
+    const grupo = await Grupo.findByPk(id_grupo);
+    
+    return grupo;
+    
+  } catch (error: any) {
+    throw error;
+  }
+}
+
 //Edita o nome de um grupo
 export const editarGrupo = async (id_grupo: number, id_loja: number, nome: string) => {
 

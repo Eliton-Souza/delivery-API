@@ -10,6 +10,10 @@ export const palavraPadronizado = (nome: string) => {
   .join(' ');
 }
 
+export const formataPreco = (preco: number) => {
+  return parseFloat((preco.toString()).replace(',', '.'));
+}
+
 
 export const formataSabores = (sabores: ComplementoInstance[]) => {
 
