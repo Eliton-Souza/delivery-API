@@ -85,16 +85,10 @@ router.get('/categoria', verificarToken, CategoriaController.listarCategorias);
 //Categoria
 router.post('/grupo', verificarToken, GrupoController.criarGrupos);
 router.get('/grupo', verificarToken, GrupoController.pegarGrupos);
-//router.put('/prioridadeCategoria', verificarToken, CategoriaController.editarPrioridadeCategoria);
+router.put('/grupo', verificarToken, GrupoController.editarGrupo);
 
 
-
-
-
-
-
-
-//CRUD TAXAS DE ENTREGA
+//Raxas de Entrega
 router.get('/taxas', verificarToken, TaxasController.pegarTaxas);
 router.put('/taxas', verificarToken, TaxasController.editarTaxas);
 

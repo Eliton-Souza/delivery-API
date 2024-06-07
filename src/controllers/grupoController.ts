@@ -58,3 +58,47 @@ export const pegarGrupos = async (req: Request, res: Response) => {
     return res.json({success: false, error: error.message});
   }
 }
+
+
+//edita o nome de um grupo
+export const editarGrupo = async (req: Request, res: Response) => {
+
+  const id_usuario: number | null = req.user?.id_usuario || null;
+
+  const { id_grupo, nome } = req.body;
+
+  try {
+    if(id_usuario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+
+      if(funcionario){
+        await ServiceGrupo.editarGrupo(id_grupo, funcionario.id_loja, nome);
+        return res.json({ success: true });
+      }
+    }
+
+    throw new Error('Você não tem permissão para acessar os dados desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
+
+
+
+
+
+/*
+//rota publica, lista os dados de um grupo
+export const pegarGrupoComplemento = async (req: Request, res: Response) => {
+
+  const id_grupo = req.params.id_grupo;
+
+  try {
+    const loja= await ServiceLoja.pegarDadosLoja(nome_loja);
+    
+    return res.status(200).json({ success: true, loja: loja });
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}*/
