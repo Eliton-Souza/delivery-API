@@ -38,3 +38,17 @@ export const criarComplemento = async (req: Request, res: Response) => {
     return res.json({success: false, error: error.message});
   }
 }
+
+//rota publica, lista os complementos de um grupo
+export const pegarComplementos = async (req: Request, res: Response) => {
+
+  const id_grupo = req.params.id_grupo;
+
+  try {
+    const complementos= await ServiceComplemento.pegarComplementos(id_grupo);
+    
+    return res.status(200).json({ success: true, complementos: complementos });
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}

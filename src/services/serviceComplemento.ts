@@ -17,3 +17,19 @@ export const criarComplemento = async (id_grupo: number, nome: string, preco: nu
     throw error;
   }
 }
+
+export const pegarComplementos = async (id_grupo: string) => {
+  try {
+    const complementos = await Complemento.findAll({
+      where: {
+       id_grupo
+      },
+      raw: true
+    });
+
+    return complementos;
+    
+  } catch (error: any) {
+    throw error;
+  }
+}

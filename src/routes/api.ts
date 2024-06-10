@@ -90,7 +90,7 @@ router.put('/grupo', verificarToken, GrupoController.editarGrupo);
 
 //Complemento
 router.post('/complemento', verificarToken, ComplementoController.criarComplemento);
-//router.get('/grupo', verificarToken, GrupoController.pegarGrupos);
+router.get('/complemento/:id_grupo', verificarToken, ComplementoController.pegarComplementos);
 //router.put('/grupo', verificarToken, GrupoController.editarGrupo);
 
 //Raxas de Entrega
