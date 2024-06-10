@@ -9,7 +9,6 @@ import * as ComplementoController from '../controllers/complementoController';
 import * as VerificacaoController from '../controllers/verificacaoController';
 import * as FileController from '../controllers/fileController';
 import * as ProdutoController from '../controllers/produtoController';
-import * as SaborController from '../controllers/saborController';
 import * as EnderecoController from '../controllers/enderecoController';
 import * as BairroController from '../controllers/bairroController';
 import * as TaxasController from '../controllers/taxasController';
@@ -21,56 +20,23 @@ import { uploadFile } from '../middlewares/multerConfig';
 
 const router = Router();
 
-router.post('/login', LoginController.login);
 
-//CODIGO VALIDAÇÃO
-router.post('/celular', VerificacaoController.validaCelular);
-router.post('/codigo', VerificacaoController.validaCodigo);
+//CLIENTES------->
 
-//CRUD USUARIO
-router.post('/usuario', UsuarioController.cadastrarUsuario);
-//router.get('/usuario/:id_loja', verificarToken, UsuarioController.listarFuncionarios);
-//router.put('/usuario/:id_usuario', verificarToken, UsuarioController.atualizarFuncionário);
-
-//CRUD ENDEREÇO
+//Endereco
 router.post('/endereco', verificarToken, EnderecoController.cadastrarEndereco);
 router.get('/endereco', verificarToken, EnderecoController.listarEnderecos);
 router.put('/endereco/:id_endereco', verificarToken, EnderecoController.editarEndereco);
 router.delete('/endereco/:id_endereco', verificarToken, EnderecoController.deletarEndereco);
 
-
-//PRODUTO
-router.post('/produto', verificarToken, ProdutoController.cadastrarProduto);
-router.get('/produtos/:id_loja', ProdutoController.listarProdutos);
-//router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarProduto);
-
-//SABORES
-/*
-router.post('/sabor', verificarToken, SaborController.cadastrarSabor);
-router.get('/sabores/:id_produto', SaborController.listarSabores);
-//router.put('/produto/:id_produto', verificarToken, ProdutoController.atualizarProduto);
-*/
-
-//CRUD LOJA CLIENTE
-router.post('/loja', LojaController.cadastrarLoja);
+//Dados das lojas
 router.get('/loja/:nome_loja', LojaController.pegarLoja);
 router.get('/lojas', LojaController.listarLojas);
 
-//CRUD FUNCIONARIO
-router.post('/funcionario', verificarToken, FuncionarioController.cadastrarFuncionario);
 
-//CRUD LOJA FUNCIONARIO
-router.get('/loja', verificarToken, LojaController.pegarLojaFuncionario);
-router.put('/loja/imagem', verificarToken, LojaController.atualizarImagemPerfilLoja);
-router.put('/loja/detalhes', verificarToken, LojaController.atualizarNomeContato);
-router.put('/loja/horarios', verificarToken, LojaController.editarHorarios);
 
-//router.get('/lojas', LojaController.listarLojas);
 
-//CRUD BAIRRO
-router.post('/bairro', BairroController.cadastrarBairro);
-router.get('/bairro/:cidade', BairroController.listarBairros);
-router.get('/lojas', LojaController.listarLojas);
+
 
 
 
@@ -78,10 +44,22 @@ router.get('/lojas', LojaController.listarLojas);
 
 //LOJAS------->
 
+//Funcionario
+router.post('/funcionario', verificarToken, FuncionarioController.cadastrarFuncionario);
+
+//Dados basicos de uma loja
+router.get('/loja', verificarToken, LojaController.pegarLojaFuncionario);
+router.put('/loja/imagem', verificarToken, LojaController.atualizarImagemPerfilLoja);
+router.put('/loja/detalhes', verificarToken, LojaController.atualizarNomeContato);
+router.put('/loja/horarios', verificarToken, LojaController.editarHorarios);
+
 //Categoria
 router.post('/categoria', verificarToken, CategoriaController.cadastrarCategoria);
 router.put('/prioridadeCategoria', verificarToken, CategoriaController.editarPrioridadeCategoria);
 router.get('/categoria', verificarToken, CategoriaController.listarCategorias);
+
+//Produto
+router.post('/produto', verificarToken, ProdutoController.cadastrarProduto);
 
 //Grupo
 router.post('/grupo', verificarToken, GrupoController.criarGrupos);
@@ -93,7 +71,7 @@ router.post('/complemento', verificarToken, ComplementoController.criarComplemen
 router.get('/complemento/:id_grupo', verificarToken, ComplementoController.pegarComplementos);
 //router.put('/grupo', verificarToken, GrupoController.editarGrupo);
 
-//Raxas de Entrega
+//Taxas de Entrega
 router.get('/taxas', verificarToken, TaxasController.pegarTaxas);
 router.put('/taxas', verificarToken, TaxasController.editarTaxas);
 
@@ -101,9 +79,40 @@ router.put('/taxas', verificarToken, TaxasController.editarTaxas);
 
 
 
-//ARQUIVO
-router.post('/upload-file', uploadFile.single('file'), FileController.uploadImagem);
+
+
+
+
+
+//GERAL------->
+
+//Validacao
+router.post('/usuario', UsuarioController.cadastrarUsuario);
+router.post('/login', LoginController.login);
+router.post('/celular', VerificacaoController.validaCelular);
+router.post('/codigo', VerificacaoController.validaCodigo);
+
+//Arquivos
+router.post('/upload-file', verificarToken, uploadFile.single('file'), FileController.uploadImagem);
 router.get('/imagem/:link', verificarToken, FileController.pegarImagem);
+
+//Bairro
+router.get('/bairro/:cidade', BairroController.listarBairros);
+router.get('/lojas', LojaController.listarLojas);
+
+
+
+
+
+
+
+
+
+
+//PRIVADO------->
+router.post('/loja', LojaController.cadastrarLoja);
+router.post('/bairro', BairroController.cadastrarBairro);
+
 
 
 

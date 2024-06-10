@@ -1,28 +1,27 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 import { Grupo } from './Grupo';
-import { ProdutoSimples } from './ProdutoSimples';
+import { Pizza } from './Pizza';
 
 //Associação entre as tabelas Pizza e Grupo Sabor
-export interface AssProdutoGrupoInstance extends Model {
-    id_produtoGrupo: number;
-    id_produtoSimples: number;
+export interface AssPizzaGrupoInstance extends Model {
+    id_pizzaGrupo: number;
+    id_pizza: number;
     id_grupo: number;
-    qtdComplementos: number;
 }
 
-export const AssProdutoGrupo= sequelize.define<AssProdutoGrupoInstance>('AssProdutoGrupo', {
-    id_produtoGrupo: {
+export const AssPizzaGrupo= sequelize.define<AssPizzaGrupoInstance>('AssPizzaGrupo', {
+    id_pizzaGrupo: {
         primaryKey: true,
         autoIncrement: true,
         type: DataTypes.INTEGER
     },
-    id_produtoSimples: {
+    id_pizza: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: ProdutoSimples,
-            key: 'id_produtoSimples'
+            model: Pizza,
+            key: 'id_pizza'
         }
     },
     id_grupo: {
@@ -33,12 +32,8 @@ export const AssProdutoGrupo= sequelize.define<AssProdutoGrupoInstance>('AssProd
             key: 'id_grupo'
         }
     },
-    qtdComplementos: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
 }, {
-    tableName: 'AssProdutoGrupo',
+    tableName: 'AssPizzaGrupo',
     timestamps: false
 });
 
@@ -50,5 +45,5 @@ GrupoSabor.hasMany(PizzaGrupoSabor, { foreignKey: 'id_grupo' });
 PizzaGrupoSabor.belongsTo(GrupoSabor, { foreignKey: 'id_pizzaGrupo' });*/
 
 // Definir relacionamentos muitos-para-muitos
-ProdutoSimples.belongsToMany(Grupo, { through: AssProdutoGrupo, foreignKey: 'id_produtoSimples' });
-Grupo.belongsToMany(ProdutoSimples, { through: AssProdutoGrupo, foreignKey: 'id_grupo' });
+Pizza.belongsToMany(Grupo, { through: AssPizzaGrupo, foreignKey: 'id_pizza' });
+Grupo.belongsToMany(Pizza, { through: AssPizzaGrupo, foreignKey: 'id_grupo' });

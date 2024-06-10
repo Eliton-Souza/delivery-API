@@ -7,8 +7,8 @@ export interface SaborInstance extends Model {
     id_grupo: number;
     nome: string;    
     imagem: string;
-    descricao: string;      //Sabores de pizza como: 4queijos, moda... adicionais gerais como: bacon, queijo
-    status: boolean;         //ativado, desativado.
+    descricao: string;          //ingredientes dos sabores como: queijo, calabresa...
+    status: boolean;            //1-ativado, 2-desativado
 }
 
 export const Sabor= sequelize.define<SaborInstance>('Sabor', {

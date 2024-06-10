@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { dadosUsuario } from '../config/passport';
-import { criarProduto, pegarProdutos } from '../services/serviceProduto';
+import { criarProduto } from '../services/serviceProduto';
 import * as ServiceFuncionario from '../services/serviceFuncionario';
 import { sequelize } from '../instances/mysql';
 import { registrarPreco } from '../services/servicePreco';
@@ -46,22 +46,6 @@ export const cadastrarProduto = async (req: Request, res: Response) => {
     }
     await transaction.rollback();
     return res.json({success: false, error: error.message});
-  }
-}
-
-
-  
-//lista todos os produtos de uma loja com base no id_loja
-export const listarProdutos = async (req: Request, res: Response) => {
-
-  const id_loja = req.params.id_loja;
-
-  try {
-    const produtos= await pegarProdutos(id_loja);
-    
-    return res.status(200).json({ success: true, produtos: produtos });
-  } catch (error: any) {
-    return res.json({success: false, error: "Erro ao encontrar produtos"});
   }
 }
 
