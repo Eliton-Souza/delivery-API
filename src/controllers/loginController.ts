@@ -21,10 +21,10 @@ export const login = async (req: Request, res: Response) => {
       const funcionario= await pegarFuncinario(id_login);
 
       if(funcionario){
-        const payload= gerarPayloadFuncionario(funcionario.id_funcionario, usuario.nome, usuario.sobrenome, usuario.avatar);
+        const payload= gerarPayloadFuncionario(id_login, usuario.nome, usuario.sobrenome, usuario.avatar);
         token = gerarTokenFuncionario(payload);
       }else{
-        const payload= gerarPayloadUsuario(usuario.id_usuario, usuario.nome, usuario.sobrenome, usuario.avatar);
+        const payload= gerarPayloadUsuario(id_login, usuario.nome, usuario.sobrenome, usuario.avatar);
         token = gerarTokenUsuario(payload);
       }
 
