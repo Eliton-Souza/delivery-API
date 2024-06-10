@@ -1,31 +1,24 @@
 import { Request, Response } from 'express';
-import { dadosUsuario } from '../config/passport';
 import { criarProduto } from '../services/serviceProduto';
-import * as ServiceFuncionario from '../services/serviceFuncionario';
 import { sequelize } from '../instances/mysql';
 import { registrarPreco } from '../services/servicePreco';
 import { pegaCategoria } from '../services/serviceCategoria';
 import { deletarImagemS3 } from '../services/serviceAWS';
+import * as ServiceFuncionario from '../services/serviceFuncionario';
 
-declare global {
-  namespace Express {
-    interface User extends dadosUsuario {}
-  }
-}
 
 //Cadastra um produto novo
 export const cadastrarProduto = async (req: Request, res: Response) => {
 
-  const id_funcionario: number | null = req.user?.id_funcionario || null;
-  const id_usuario: number | null = req.user?.id_usuario || null;
+  const id_funcionario: number = req.funcionario.id_funcionario;
 
   const transaction = await sequelize.transaction();
 
   const { nome, preco, tipo, id_categoria, imagem, descricao } = req.body;;
   
   try {
-    if(id_funcionario && id_usuario){
-      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+    if(id_funcionario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_funcionario);
       const categoria= await pegaCategoria(id_categoria);
 
       if(funcionario && categoria && funcionario.id_loja == categoria.id_loja){
@@ -48,32 +41,3 @@ export const cadastrarProduto = async (req: Request, res: Response) => {
     return res.json({success: false, error: error.message});
   }
 }
-
-
-  /*
-
-export const atualizarProduto = async (req: Request, res: Response) => {
-  const id_produto = req.params.id_produto;
-  const id_usuario: number = req.user?.id_usuario || 0;
-
-  const { nome, avatar, descricao, categoria } = req.body;
-  
-    try {
-      const funcionario = await pegar1Funcionario(id_usuario);    
-      await alterarProduto(id_produto, nome, avatar, descricao, categoria, Number(funcionario?.id_loja));
-      
-      return res.status(200).json({ success: true });
-      
-    } catch (error:any) {
-      return res.json({ success: false, error: error.message });
-    }  
-};
-
-DELETE: VERIFICAR SE O PRODUTO ESTÁ EM ALGUM PEDIDO
-    SE SIM: STATUS = ARQUIVADO
-    SE NAO: DELETA DO BANCO 
-  */
-
-
-
-

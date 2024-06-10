@@ -1,26 +1,16 @@
 import { Request, Response } from 'express';
-import { dadosUsuario } from '../config/passport';
 import * as ServiceCategoria from '../services/serviceCategoria';
 import * as ServiceFuncionario from '../services/serviceFuncionario';
 
 
-declare global {
-  namespace Express {
-    interface User extends dadosUsuario {}
-  }
-}
-
 //Cadastra uma nova categoria para loja
 export const cadastrarCategoria = async (req: Request, res: Response) => {
-
-  const id_funcionario: number | null = req.user?.id_funcionario || null;
-  const id_usuario: number | null = req.user?.id_usuario || null;
-
+  const id_funcionario: number = req.funcionario.id_funcionario;
   const { nome, prioridade } = req.body;
   
   try {
-    if(id_funcionario && id_usuario){
-      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+    if(id_funcionario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_funcionario);
 
       if(funcionario){
         const categoria= await ServiceCategoria.criarCategoria(funcionario.id_loja, nome, prioridade);
@@ -39,14 +29,13 @@ export const cadastrarCategoria = async (req: Request, res: Response) => {
 //edita uma lista de horarios
 export const editarPrioridadeCategoria = async (req: Request, res: Response) => {
 
-  const id_funcionario: number | null = req.user?.id_funcionario || null;
-  const id_usuario: number | null = req.user?.id_usuario || null;
+  const id_funcionario: number = req.funcionario.id_funcionario;
 
   const { categorias } = req.body;
 
   try {
-    if(id_funcionario && id_usuario){
-      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+    if(id_funcionario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_funcionario);
 
       if(funcionario){
         await ServiceCategoria.editarPrioridadeCategorias(categorias, funcionario.id_loja);
@@ -66,12 +55,11 @@ export const editarPrioridadeCategoria = async (req: Request, res: Response) => 
 //lista todos as categorias de uma loja
 export const listarCategorias = async (req: Request, res: Response) => {
 
-  const id_funcionario: number | null = req.user?.id_funcionario || null;
-  const id_usuario: number | null = req.user?.id_usuario || null;
+  const id_funcionario: number = req.funcionario.id_funcionario;
 
   try {
-    if(id_funcionario && id_usuario){
-      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+    if(id_funcionario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_funcionario);
 
       if(funcionario){
         const categorias= await ServiceCategoria.pegarCategorias(funcionario.id_loja);
@@ -85,30 +73,5 @@ export const listarCategorias = async (req: Request, res: Response) => {
     return res.json({success: false, error: error.message});
   }
 }
-
-/*
-export const atualizarProduto = async (req: Request, res: Response) => {
-  const id_produto = req.params.id_produto;
-  const id_usuario: number = req.user?.id_usuario || 0;
-
-  const { nome, avatar, descricao, categoria } = req.body;
-  
-    try {
-      const funcionario = await pegar1Funcionario(id_usuario);    
-      await alterarProduto(id_produto, nome, avatar, descricao, categoria, Number(funcionario?.id_loja));
-      
-      return res.status(200).json({ success: true });
-      
-    } catch (error:any) {
-      return res.json({ success: false, error: error.message });
-    }  
-};
-
-DELETE: VERIFICAR SE O PRODUTO ESTÁ EM ALGUM PEDIDO
-    SE SIM: STATUS = ARQUIVADO
-    SE NAO: DELETA DO BANCO 
-  */
-
-
 
 

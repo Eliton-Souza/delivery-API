@@ -1,13 +1,7 @@
 import { Request, Response } from 'express';
-import { dadosUsuario } from '../config/passport';
+import { dadosUsuario } from '../config/passportUsuario';
 import { criarBairro, pegarBairros } from '../services/serviceBairro';
 
-
-declare global {
-  namespace Express {
-    interface User extends dadosUsuario {}
-  }
-}
 
 //Cadastra um bairro novo
 export const cadastrarBairro = async (req: Request, res: Response) => {

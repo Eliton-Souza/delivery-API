@@ -30,13 +30,10 @@ export const criarUsuario = async (nome: string, sobrenome: string, nascimento: 
 export const pegarUsuario = async (id_login: number) => {
 
   try {
-    const usuario = await Usuario.findOne({
-      where: {
-        id_login
-      },
-      attributes: ['id_usuario', 'nome', 'sobrenome', 'avatar'],
-      raw: true
-  });
+    const usuario = await Usuario.findByPk(id_login,
+    {
+      attributes: ['nome', 'sobrenome', 'avatar'],
+    });
     
     return usuario;
     

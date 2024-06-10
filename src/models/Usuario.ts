@@ -9,15 +9,18 @@ export interface UsuarioInstance extends Model{
     sobrenome: string;
     genero: string;
     nascimento: Date;
-    id_login: number;
     avatar: string;
 }
 
 export const Usuario= sequelize.define<UsuarioInstance>('Usuario', {
     id_usuario: {
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        type: DataTypes.INTEGER
+        autoIncrement: false,
+        references: {
+            model: Login,
+            key: 'id_login'
+        }
     },
     nome: {
         type: DataTypes.STRING,
@@ -35,15 +38,7 @@ export const Usuario= sequelize.define<UsuarioInstance>('Usuario', {
         type: DataTypes.DATE,
         allowNull: true
     },
-    id_login: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,
-        references: {
-            model: Login,
-            key: 'id_login'
-        }
-    },
+    
     avatar: {
         type: DataTypes.STRING,
         allowNull: true
@@ -54,4 +49,4 @@ export const Usuario= sequelize.define<UsuarioInstance>('Usuario', {
 });
 
 Login.hasOne(Usuario, { foreignKey: 'id_login' });
-Usuario.belongsTo(Login, { foreignKey: 'id_login' });
+Usuario.belongsTo(Login, { foreignKey: 'id_usuario' });

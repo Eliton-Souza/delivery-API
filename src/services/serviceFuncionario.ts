@@ -19,15 +19,10 @@ export const criarFuncionario = async (id_loja: number, id_usuario: number, tipo
 
 
 //pega os dados basicos de um usuario
-export const pegarFuncinario = async (id_usuario: number) => {
+export const pegarFuncinario = async (id_funcionario: number) => {
 
   try {
-    const funcionario = await Funcionario.findOne({
-      where: {
-        id_usuario
-      },
-      raw: true
-  });
+    const funcionario = await Funcionario.findByPk(id_funcionario);
     
     return funcionario;
     

@@ -1,16 +1,11 @@
 import { Request, Response } from 'express';
 import { sequelize } from '../instances/mysql';
-import { dadosUsuario } from '../config/passport';
+import { dadosUsuario } from '../config/passportUsuario';
 import { atualizaPrecoMin } from '../services/serviceProduto';
 import { criarSabor, pegarSabores } from '../services/serviceSabor';
 import { registrarTamPreco } from '../services/servicePreco';
 
 
-declare global {
-  namespace Express {
-    interface User extends dadosUsuario {}
-  }
-}
 /*
 
 export const cadastrarSabor = async (req: Request, res: Response) => {

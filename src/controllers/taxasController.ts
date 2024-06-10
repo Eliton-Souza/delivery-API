@@ -1,24 +1,17 @@
 import { Request, Response } from 'express';
-import { dadosUsuario } from '../config/passport';
 import * as ServiceFuncionario from '../services/serviceFuncionario';
 import * as ServiceTaxas from '../services/serviceTaxaEntrega';
 import { editaTempoEntrega } from '../services/serviceLoja';
 
-declare global {
-  namespace Express {
-    interface User extends dadosUsuario {}
-  }
-}
 
 //Pega todas as taxas de entrega para os bairros de uma loja
 export const pegarTaxas = async (req: Request, res: Response) => {
 
-  const id_funcionario: number | null = req.user?.id_funcionario || null;
-  const id_usuario: number | null = req.user?.id_usuario || null;
+  const id_funcionario: number = req.funcionario.id_funcionario;
 
   try {
-    if(id_funcionario && id_usuario){
-      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+    if(id_funcionario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_funcionario);
 
       if(funcionario){
    
@@ -38,14 +31,13 @@ export const pegarTaxas = async (req: Request, res: Response) => {
 //edita uma lista de taxas e tempo de entrega
 export const editarTaxas = async (req: Request, res: Response) => {
 
-  const id_funcionario: number | null = req.user?.id_funcionario || null;
-  const id_usuario: number | null = req.user?.id_usuario || null;
+  const id_funcionario: number = req.funcionario.id_funcionario;
 
   const { taxas, tempo } = req.body;
 
   try {
-    if(id_funcionario && id_usuario){
-      const funcionario= await ServiceFuncionario.pegarFuncinario(id_usuario);
+    if(id_funcionario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_funcionario);
 
       if(funcionario){
         await editaTempoEntrega(funcionario.id_loja, tempo);

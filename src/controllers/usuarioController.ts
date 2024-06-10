@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { sequelize } from '../instances/mysql';
-import { dadosUsuario, gerarPayload, gerarToken } from '../config/passport';
+import { dadosUsuario, } from '../config/passportUsuario';
 import { fazerLogin, gerarLogin } from '../services/serviceLogin';
 import { deletaLoginVerificado } from '../services/serviceVerificacao';
 import {
@@ -9,11 +9,6 @@ import {
 from '../services/serviceUsuario';
 
 
-declare global {
-  namespace Express {
-    interface User extends dadosUsuario {}
-  }
-}
 
 //MELHORAR ESSE TIPO DE USUARIO E RESTRINGIR ACESSO APENAS DEPOIS DE VALIDAR CONTATO
 export const cadastrarUsuario = async (req: Request, res: Response) => {
@@ -27,9 +22,9 @@ export const cadastrarUsuario = async (req: Request, res: Response) => {
     const usuario = await criarUsuario(nome, sobrenome, nascimento, genero, id_login, avatar, transaction);
     await transaction.commit();
 
-    const payload= gerarPayload(usuario.id_usuario, null, usuario.nome, usuario.sobrenome, usuario.avatar);
-    const token= gerarToken(payload);
-    return res.status(200).json({ success: true, token: token });
+    //const payload= gerarPayload(usuario.id_usuario, null, usuario.nome, usuario.sobrenome, usuario.avatar);
+    //const token= gerarToken(payload);
+    //return res.status(200).json({ success: true, token: token });
   
   }catch (error: any) {
     await transaction.rollback();
