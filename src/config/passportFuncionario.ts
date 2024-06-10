@@ -49,7 +49,7 @@ export const verificarTokenFuncionario = (req: Request, res: Response, next: Nex
 
 
 export const gerarTokenFuncionario = (dados: dadosFuncionario) => {
-    return jwt.sign(dados, process.env.JWT_SECRET as string, { expiresIn: '7d' });
+    return jwt.sign(dados, process.env.JWT_SECRET as string);
 };
 
 
