@@ -4,10 +4,29 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import apiRoutes from './routes/api';
 import passport from 'passport';
+import { dadosUsuario } from './config/passportUsuario';
+import { dadosFuncionario } from './config/passportFuncionario';
 
 dotenv.config();
 
 const server = express();
+
+declare global {
+    namespace Express {
+        interface Request {
+            funcionario: dadosFuncionario;
+        }
+    }
+}
+
+declare global {
+    namespace Express {
+        interface Request {
+            usuario: dadosUsuario;
+        }
+    }
+}
+
 
 //configura quem pode acessar a api
 server.use(cors({
@@ -42,6 +61,5 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     }
 }
 server.use(errorHandler);
-
 
 server.listen(process.env.PORT);
