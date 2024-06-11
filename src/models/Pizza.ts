@@ -11,7 +11,6 @@ export const Pizza= sequelize.define<PizzaInstance>('Pizza', {
     id_pizza: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
         autoIncrement: false,
         references: {
             model: Produto,
@@ -28,5 +27,5 @@ export const Pizza= sequelize.define<PizzaInstance>('Pizza', {
 });
 
 
-Produto.hasOne(Pizza, { foreignKey: 'id_produto' });
+Produto.hasOne(Pizza, { foreignKey: 'id_pizza' });
 Pizza.belongsTo(Produto, { foreignKey: 'id_pizza' });

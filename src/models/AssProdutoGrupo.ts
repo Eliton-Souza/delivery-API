@@ -1,14 +1,14 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 import { Grupo } from './Grupo';
-import { ProdutoSimples } from './ProdutoSimples';
+import { Produto } from './Produto';
 
 //Associação entre as tabelas Pizza e Grupo Sabor
 export interface AssProdutoGrupoInstance extends Model {
     id_produtoGrupo: number;
-    id_produtoSimples: number;
+    id_produto: number;
     id_grupo: number;
-    qtdComplementos: number;
+    qtdSelecionais: number;
 }
 
 export const AssProdutoGrupo= sequelize.define<AssProdutoGrupoInstance>('AssProdutoGrupo', {
@@ -17,12 +17,12 @@ export const AssProdutoGrupo= sequelize.define<AssProdutoGrupoInstance>('AssProd
         autoIncrement: true,
         type: DataTypes.INTEGER
     },
-    id_produtoSimples: {
+    id_produto: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: ProdutoSimples,
-            key: 'id_produtoSimples'
+            model: Produto,
+            key: 'id_produto'
         }
     },
     id_grupo: {
@@ -33,7 +33,7 @@ export const AssProdutoGrupo= sequelize.define<AssProdutoGrupoInstance>('AssProd
             key: 'id_grupo'
         }
     },
-    qtdComplementos: {
+    qtdSelecionais: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -50,5 +50,5 @@ GrupoSabor.hasMany(PizzaGrupoSabor, { foreignKey: 'id_grupo' });
 PizzaGrupoSabor.belongsTo(GrupoSabor, { foreignKey: 'id_pizzaGrupo' });*/
 
 // Definir relacionamentos muitos-para-muitos
-ProdutoSimples.belongsToMany(Grupo, { through: AssProdutoGrupo, foreignKey: 'id_produtoSimples' });
-Grupo.belongsToMany(ProdutoSimples, { through: AssProdutoGrupo, foreignKey: 'id_grupo' });
+Produto.belongsToMany(Grupo, { through: AssProdutoGrupo, foreignKey: 'id_produto' });
+Grupo.belongsToMany(Produto, { through: AssProdutoGrupo, foreignKey: 'id_grupo' });

@@ -7,6 +7,7 @@ export interface ProdutoInstance extends Model {
     id_categoria: number;
     nome: string;    
     tipo: string;               //pizza, outros...
+    preco: number;
     imagem: string;
     descricao: string;
     status: boolean;             //1-ativado, 2-desativado
@@ -33,6 +34,10 @@ export const Produto= sequelize.define<ProdutoInstance>('Produto', {
     },
     tipo: {
         type: DataTypes.STRING,
+        allowNull: false
+    },
+    preco: {
+        type: DataTypes.FLOAT,
         allowNull: false
     },
     imagem: {
