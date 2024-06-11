@@ -23,8 +23,11 @@ export const cadastrarProduto = async (req: Request, res: Response) => {
 
       if(funcionario && categoria && funcionario.id_loja == categoria.id_loja){
 
-        const produto= await criarProduto(nome, tipo, id_categoria, imagem, descricao, transaction);
-        await registrarPreco(produto.id_produto, null, preco, transaction);
+        const produto= await criarProduto(nome, preco, tipo, id_categoria, imagem, descricao, transaction);
+        //await registrarPreco(produto.id_produto, null, preco, transaction);
+        if(tipo=='pizza'){
+          //cadastra em pizza
+        }
 
         await transaction.commit();
         return res.status(200).json({ success: true });

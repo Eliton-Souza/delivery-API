@@ -1,16 +1,18 @@
 import { Produto } from '../models/Produto';
-import { palavraPadronizado } from './helper';
+import { formataPreco, palavraPadronizado } from './helper';
 
 
 //cadastra um novo produto
-export const criarProduto = async (nome: string, tipo: string, id_categoria: string, imagem: string, descricao: string, transaction: any ) => {
+export const criarProduto = async (nome: string, preco: number, tipo: string, id_categoria: string, imagem: string, descricao: string, transaction: any ) => {
 
   const nomePadronizado = palavraPadronizado(nome);
   const descricaoPadronizada= descricao.replace(/\n+/g, ' ');
+  const precoPadronizado=  formataPreco(preco);
 
   try {
     const produto = await Produto.create({
       nome: nomePadronizado,
+      preco:precoPadronizado,
       tipo,
       id_categoria,
       descricao: descricao ? descricaoPadronizada : null,

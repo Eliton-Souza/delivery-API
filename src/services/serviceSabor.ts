@@ -1,5 +1,4 @@
 import { Op } from 'sequelize';
-import { Preco } from '../models/Preco';
 import { formataSabores, palavraPadronizado } from './helper';
 import { Complemento } from '../models/Complemento';
 
@@ -25,7 +24,7 @@ export const criarSabor = async (id_produto: string, nome: string, imagem: strin
   }
 }
 
-
+/*
 //lista todos os sabores de um produto
 export const pegarSabores = async (id_produto: string) => {
   try {
@@ -54,7 +53,7 @@ export const pegarSabores = async (id_produto: string) => {
 }
 
 
-/*
+
 
 
 

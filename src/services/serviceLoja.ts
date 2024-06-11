@@ -5,7 +5,6 @@ import { HorarioLoja } from '../models/HorarioLoja';
 import { format } from 'date-fns';
 import { Produto } from '../models/Produto';
 import { Categoria } from '../models/Categoria';
-import { Preco } from '../models/Preco';
 
 //cadastra uma nova loja
 export const criarLoja = async (nome: string, tipo: string, transaction: any) => {
@@ -78,13 +77,6 @@ export const pegarDadosLoja = async (identificador: string | number) => {
               include: [
                 {
                   model: Produto,
-                  separate: true,  // Adiciona separate para produtos
-                  include: [
-                    {
-                      model: Preco,
-                      attributes: ['preco']
-                    },
-                  ]
                 },
               ],
             },
