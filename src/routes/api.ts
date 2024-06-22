@@ -71,6 +71,8 @@ router.put('/grupo', verificarTokenFuncionario, GrupoController.editarGrupo);
 router.post('/complemento', verificarTokenFuncionario, ComplementoController.criarComplemento);
 router.get('/complemento/:id_grupo', verificarTokenFuncionario, ComplementoController.pegarComplementos);
 //router.put('/grupo', verificarToken, GrupoController.editarGrupo);
+router.delete('/complemento/:id_complemento', verificarTokenFuncionario, ComplementoController.deletarComplemento);
+
 
 //Taxas de Entrega
 router.get('/taxas', verificarTokenFuncionario, TaxasController.pegarTaxas);

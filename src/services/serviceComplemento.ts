@@ -33,3 +33,27 @@ export const pegarComplementos = async (id_grupo: string) => {
     throw error;
   }
 }
+
+//pega um complemento
+export const pegaComplemento = async (id_complemento: string) => {
+  try {
+    const complemento = await Complemento.findByPk(id_complemento, {raw:true});
+    
+    return complemento;
+    
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+
+//deleta um complemento
+export const deletarComplemento = async (id_complemento: string) => {
+  
+  try {  
+    await Complemento.destroy({where:{id_complemento}});
+    return true;
+  } catch (error: any) {
+    throw error;
+  }
+}
