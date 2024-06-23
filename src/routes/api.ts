@@ -70,7 +70,7 @@ router.put('/grupo', verificarTokenFuncionario, GrupoController.editarGrupo);
 //Complemento
 router.post('/complemento', verificarTokenFuncionario, ComplementoController.criarComplemento);
 router.get('/complemento/:id_grupo', verificarTokenFuncionario, ComplementoController.pegarComplementos);
-//router.put('/grupo', verificarToken, GrupoController.editarGrupo);
+router.put('/complemento/:id_complemento', verificarTokenFuncionario, ComplementoController.editarComplemento);
 router.delete('/complemento/:id_complemento', verificarTokenFuncionario, ComplementoController.deletarComplemento);
 
 

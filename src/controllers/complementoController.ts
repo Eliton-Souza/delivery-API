@@ -46,6 +46,32 @@ export const pegarComplementos = async (req: Request, res: Response) => {
   }
 }
 
+//edita um complemento de um grupo
+export const editarComplemento = async (req: Request, res: Response) => {
+
+  const id_funcionario: number = req.funcionario.id_funcionario;
+  const id_complemento = req.params.id_complemento;
+
+  const { nome, preco, status } = req.body;
+
+  try {
+    
+    if(id_funcionario){
+      const funcionario= await ServiceFuncionario.pegarFuncinario(id_funcionario);
+
+      if(funcionario){
+        await ServiceComplemento.editarComplemento(funcionario.id_loja, id_complemento, nome, preco, status);
+        return res.status(200).json({ success: true });
+      }
+    }
+
+    throw new Error('Você não tem permissão para alterar os dados desta loja');
+    
+  } catch (error: any) {
+    return res.json({success: false, error: error.message});
+  }
+}
+
 
 //rota privada, deleta um complemento de um grupo
 export const deletarComplemento = async (req: Request, res: Response) => {
