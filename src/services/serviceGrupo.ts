@@ -6,7 +6,7 @@ export const criarGrupo = async (id_loja: number, nome: string, tipo: string) =>
   try {
     const grupo= await Grupo.create({
       id_loja,
-      nome,
+      nome: palavraPadronizado(nome),
       tipo
     });
 
