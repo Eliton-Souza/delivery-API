@@ -14,7 +14,7 @@ export const cadastrarProduto = async (req: Request, res: Response) => {
 
   const transaction = await sequelize.transaction();
 
-  const { nome, preco, tipo, id_categoria, imagem, descricao } = req.body;;
+  const { nome, preco, tipo, id_categoria, imagem, descricao } = req.body;
   
   try {
     if(id_funcionario){
