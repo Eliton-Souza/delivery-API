@@ -18,22 +18,28 @@ export const criarGrupo = async (id_loja: number, nome: string, tipo: string) =>
 }
 
 
-//lista todos os grupos de uma loja
-export const pegarGrupos = async (id_loja: number) => {
+// Lista todos os grupos de uma loja
+export const pegarGrupos = async (id_loja: number, tipo: string) => {
   try {
+    const whereCondition: any = {
+      id_loja,
+    };
+
+    if (tipo!='todos') {
+      whereCondition.tipo = tipo;
+    }
+
     const grupos = await Grupo.findAll({
-      where: {
-        id_loja
-      },
+      where: whereCondition,
       raw: true
     });
     
     return grupos;
-    
   } catch (error: any) {
     throw error;
   }
-}
+};
+
 
 //pega os dados de 1 grupo --Uso interno
 export const pegaGrupo = async (id_grupo: number) => {

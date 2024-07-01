@@ -64,7 +64,7 @@ router.post('/produto', verificarTokenFuncionario, ProdutoController.cadastrarPr
 
 //Grupo
 router.post('/grupo', verificarTokenFuncionario, GrupoController.criarGrupos);
-router.get('/grupo', verificarTokenFuncionario, GrupoController.pegarGrupos);
+router.get('/grupo/:tipo', verificarTokenFuncionario, GrupoController.pegarGrupos);
 router.put('/grupo', verificarTokenFuncionario, GrupoController.editarGrupo);
 
 //Complemento

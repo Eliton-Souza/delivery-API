@@ -30,13 +30,14 @@ export const criarGrupos = async (req: Request, res: Response) => {
 export const pegarGrupos = async (req: Request, res: Response) => {
 
   const id_funcionario: number = req.funcionario.id_funcionario;
+  const tipo = req.params.tipo;
 
   try {
     if(id_funcionario){
       const funcionario= await ServiceFuncionario.pegarFuncinario(id_funcionario);
 
       if(funcionario){
-        const grupos= await ServiceGrupo.pegarGrupos(funcionario.id_loja);
+        const grupos= await ServiceGrupo.pegarGrupos(funcionario.id_loja, tipo);
         return res.status(200).json({ success: true, grupos: grupos });
       }
     }
